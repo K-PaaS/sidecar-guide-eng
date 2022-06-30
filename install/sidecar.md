@@ -15,7 +15,7 @@
   2.4. [Kubespray Download](#2.4)  
   2.5. [Ubuntu, Python Package Installation](#2.5)  
   2.6. [Kubespray File Modification](#2.6)  
-  2.7. [Modify Kubespray Settings for Sidecar Installation](#2.7)  
+  2.7. [Change Kubespray Settings for Sidecar Installation](#2.7)  
   　2.7.1 [AWS](#2.7.1)  
   　2.7.2 [Openstack](#2.7.2)  
   2.8. [Kubernetes Cluster Configuration via Kuberpray](#2.8)  
@@ -343,9 +343,9 @@ master_node_hostname: {MASTER_NODE_HOSTNAME}
 
 <br>
 
-## <div id='2.7'> 2.7. Sidecar 설치용 Kubespray 설정 변경
+## <div id='2.7'> 2.7. Change Kubespray Settings for Sidecar Installation
 
-- ingress_nginx_enabled 를 비활성화 한다. (AWS, Openstack 공통)
+- Disable ingress_nginx_enabled. (Common AWS, Openstack)
 ```
 $ vi inventory/mycluster/group_vars/k8s_cluster/addons.yml
 ...
@@ -356,7 +356,7 @@ ingress_nginx_enabled: false
 <br>
 
 ### <div id='2.7.1'> 2.7.1. AWS
-- AWS 환경 사용 시 cloud_provider를 AWS로 설정한다.
+- Set cloud_provider to AWS when using AWS environment.
 ```
 $ vi inventory/mycluster/group_vars/all/all.yml
 ...
@@ -364,7 +364,7 @@ cloud_provider: aws
 ...
 ```
 
-- AWS 환경 사용 시 EBS를 사용한다면 EBS에 대한 설정을 추가한다.  
+- Add settings for EBS when using AWS environment with EBS.  
 ```
 $ vi inventory/mycluster/group_vars/all/aws.yml
 
@@ -381,7 +381,7 @@ aws_ebs_csi_plugin_image_tag: latest
 <br>
 
 ### <div id='2.7.2'> 2.7.2. Openstack
-- Openstack 환경 사용 시 Octavia LoadBalancer를 사용한다면 Octavia에 대한 설정을 추가한다. (선택)
+- If you use Octavia Load Balancer when using Openstack environment, add settings for Octavia. (Optional)
 ```
 $ vi inventory/mycluster/group_vars/all/openstack.yml
 ...
@@ -402,10 +402,10 @@ external_openstack_lbaas_internal_lb: false
 ```
 <br>
 
-## <div id='2.8'> 2.8. Kuberspray를 통한 Kubernetes Cluster 구성
+## <div id='2.8'> 2.8. Kubernetes Cluster Configuration via Kuberpray
 ### <div id='2.8.1'> 2.8.1. AWS
 
-- AWS 환경 사용 시 다음 명령어를 통해 Cluster 구성을 진행한다.
+- When using an AWS environment, use the following command to proceed with cluster configuration.
 ```
 $ ansible-playbook -i ./inventory/mycluster/inventory.ini ./cluster.yml -e ansible_user=$(whoami) -b --become-user=root --flush-cache
 ```
@@ -413,11 +413,11 @@ $ ansible-playbook -i ./inventory/mycluster/inventory.ini ./cluster.yml -e ansib
 <br>
 
 ### <div id='2.8.2'> 2.8.2. Openstack
-Openstack 환경 사용 시 기존 Container-Platform 단독 배포 설치 가이드와 동일하게 진행한다.
-- 인벤토리 빌더로 Ansible 인벤토리 파일을 업데이트한다.
+When using the Openstack environment, proceed in the same way as the existing Container-Platform solo deployment installation guide.
+- Update the Ansible inventory file to the inventory builder.
 ```
 ## {MASTER_NODE_IP}, {WORKER_NODE_IP} : Master, Worker Node Private IP
-## {WORKER_NODE_IP}는 사용할 WORKER_NODE 개수(1개 이상)에 따라 작성
+## Create {WORKER_NODE_IP} based on the number of WORKER_NODEs to use (at least one)
 
 $ declare -a IPS=({MASTER_NODE_IP} {WORKER_NODE_IP1} {WORKER_NODE_IP2} {WORKER_NODE_IP3})
 
@@ -426,7 +426,7 @@ declare -a IPS=(10.x.x.x 10.x.x.x 10.x.x.x 10.x.x.x)
 ```
 
 ```
-## ${IPS[@]}는 변수가 아니라 명령어의 일부분이므로 주의
+## Be aware that ${IPS[@]} is not a variable but a part of the command
 
 $ CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 ```
@@ -441,7 +441,7 @@ Please enter your OpenStack Password for project admin as user admin: {패스워
 
 - Openstack 네트워크 인터페이스의 MTU값이 기본값 1450이 아닐 경우 CNI Plugin MTU 설정 변경이 필요하다.
 ```
-## MTU 확인 (ex mtu 1400)
+## MTU Check (ex mtu 1400)
 
 $ ifconfig
 ens3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1400
