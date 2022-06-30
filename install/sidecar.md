@@ -210,7 +210,7 @@ $ cat ~/.ssh/id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@paasta-cp-master
 ```
 
-- 사용할 Master, Worker Node의 authorized_keys 파일 본문의 마지막 부분(기존 본문 내용 아래 추가)에 공개키를 복사한다.
+- Copy the public key to the end of the authorized_keys file body of the master, Worker Node to use (add below the existing body contents).
 ```
 $ vi ~/.ssh/authorized_keys
 
@@ -220,36 +220,36 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmA
 ```
 <br>
 
-## <div id='2.4'> 2.4. Kubespray 다운로드
-- git clone 명령을 통해 다음 경로에서 Kubespray 다운로드를 진행한다. 본 설치 가이드에서의 paas-ta-container-platform의 버전은 v1.1.0이며 Kubespray 버전은 v2.16.0 이다.
+## <div id='2.4'> 2.4. Kubespray Download
+- Download Kubespray from the following path through the git clone command. The version of the paas-ta-container-platform in this installation guide is v1.1.0 and the version of Kubespray is v2.16.0.
 ```
 $ git clone https://github.com/PaaS-TA/paas-ta-container-platform-deployment.git -b v1.1.0
 ```
 
 <br>
 
-## <div id='2.5'> 2.5. Ubuntu, Python Package 설치
-Kubespray 설치에 필요한 Ansible, Jinja 등 Python Package 설치를 진행한다.
+## <div id='2.5'> 2.5. Ubuntu, Python Package Installation
+Install Python packages such as Ansible and Jinja, which are necessary for Kubespray installation..
 
-- apt-get update를 진행한다.
+- Perform apt-get update.
 ```
 $ sudo apt-get update
 ```
 
-- python3-pip Package를 설치한다.
+- Install python3-pip Package.
 ```
 $ sudo apt-get install -y python3-pip
 ```
 
-- Kubespray 설치경로 이동, pip를 이용하여 Kubespray 설치에 필요한 Python Package 설치를 진행한다.
+- Move the Kubespray installation path and install the Python Package necessary for Kubespray installation using pip.
 ```
-## AWS 환경 설치 시
+## When Installing AWS Environment
 
 $ cd paas-ta-container-platform-deployment/standalone/aws
 ```
 
 ```
-## Openstack 환경 설치 시
+## When Installing Openstack Environment
 
 $ cd paas-ta-container-platform-deployment/standalone/openstack
 ```
@@ -260,20 +260,20 @@ $ sudo pip3 install -r requirements.txt
 
 <br>
 
-## <div id='2.6'> 2.6. Kubespray 파일 수정
+## <div id='2.6'> 2.6. Kubespray File Modification
 
-- mycluster 디렉토리의 inventory.ini 파일을 설정한다.
+- Set inventory.ini file in mycluster directory.
 ```
 $ vi inventory/mycluster/inventory.ini
 ```
 
 ```
-## {MASTER_HOST_NAME}, {WORKER_HOST_NAME} : 실제 Master, Worker Node hostname
-ex) AWS 사용 시
+## {MASTER_HOST_NAME}, {WORKER_HOST_NAME} : Actual Master, Worker Node hostname
+ex) When Using AWS
 $ curl http://169.254.169.254/latest/meta-data/hostname
 ip-10-0-0-55.ap-northeast-2.compute.internal
 
-ex) Openstack 사용 시
+ex) When Using Openstack
 $ hostname
 paasta-cp-master
 ```
@@ -289,7 +289,8 @@ $ ifconfig
 ```
 [all]
 {MASTER_HOST_NAME} ansible_host={MASTER_NODE_IP} ip={MASTER_NODE_IP} etcd_member_name=etcd1
-{WORKER_HOST_NAME1} ansible_host={WORKER_NODE_IP1} ip={WORKER_NODE_IP1}      # 사용할 WORKER_NODE 개수(1개 이상)에 따라 작성
+{WORKER_HOST_NAME1} ansible_host={WORKER_NODE_IP1} ip={WORKER_NODE_IP1}      # Create based on the number of Worker_NODEs to use (one or more)
+
 {WORKER_HOST_NAME2} ansible_host={WORKER_NODE_IP2} ip={WORKER_NODE_IP2}
 {WORKER_HOST_NAME3} ansible_host={WORKER_NODE_IP3} ip={WORKER_NODE_IP3}
 
@@ -300,7 +301,7 @@ $ ifconfig
 {MASTER_HOST_NAME}
 
 [kube_node]
-{WORKER_HOST_NAME1}           # 사용할 WORKER_NODE 개수(1개 이상)에 따라 작성
+{WORKER_HOST_NAME1}           # Create based on the number of Worker_NODEs to use (one or more)
 {WORKER_HOST_NAME2}
 {WORKER_HOST_NAME3}
 
@@ -329,7 +330,7 @@ paasta-cp-master
 ...
 ```
 
-- Metrics-server 를 배포할 Master Node의 HostName 정보를 추가한다.
+- Add HostName information for the Master Node to deploy Metrics-server.
 
 ```
 $ vi roles/kubernetes-apps/metrics_server/defaults/main.yml
