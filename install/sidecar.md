@@ -1,57 +1,57 @@
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
+### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
 
 ## Table of Contents
 
-1. [문서 개요](#1)  
-  1.1. [목적](#1.1)  
-  1.2. [범위](#1.2)  
-  1.3. [참고자료](#1.3)  
+1. [Document Outline](#1)  
+  1.1. [Purpose](#1.1)  
+  1.2. [Range](#1.2)  
+  1.3. [References](#1.3)  
 
-2. [Kubespray 사용 Kubernetes Cluster 구성](#2)  
+2. [Configuring a Kubernetes Cluster with Kubespray](#2)  
   2.1. [Prerequisite](#2.1)  
-  2.2. [AWS 설정 (AWS 환경 사용 시)](#2.2)  
-    ※ [(참고) AWS IAM 설정](#2.2.1)  
-  2.3. [SSH Key 생성 및 배포](#2.3)  
-  2.4. [Kubespray 다운로드](#2.4)  
-  2.5. [Ubuntu, Python Package 설치](#2.5)  
-  2.6. [Kubespray 파일 수정](#2.6)  
-  2.7. [Sidecar 설치용 Kubespray 설정 변경](#2.7)  
+  2.2. [AWS Settings (When Using AWS Environment)](#2.2)  
+    ※ [(Refer) AWS IAM Settings](#2.2.1)  
+  2.3. [Create and Deploy SSH Keys](#2.3)  
+  2.4. [Kubespray Download](#2.4)  
+  2.5. [Ubuntu, Python Package Installation](#2.5)  
+  2.6. [Kubespray File Modification](#2.6)  
+  2.7. [Modify Kubespray Settings for Sidecar Installation](#2.7)  
   　2.7.1 [AWS](#2.7.1)  
   　2.7.2 [Openstack](#2.7.2)  
-  2.8. [Kuberspray를 통한 Kubernetes Cluster 구성](#2.8)  
+  2.8. [Kubernetes Cluster Configuration via Kuberpray](#2.8)  
   　2.8.1 [AWS](#2.8.1)  
   　2.8.2 [Openstack](#2.8.2)  
-  2.9. [Kubernetes Cluster 사용 설정 & 설치 확인](#2.9)  
-    ※ [(참고) Kubespray 사용 Kubernetes Cluster 삭제](#2.9.1)  
+  2.9. [Kubernetes Cluster Usage Setting & Installation Check](#2.9)  
+    ※ [(Refer) Kubespray Usage Kubernetes Cluster Deletion](#2.9.1)  
 
-3. [PaaS-TA Sidecar 설치](#3)  
-  3.1. [실행파일 소개](#3.1)  
-  3.2. [실행파일 다운로드](#3.2)  
-  3.3. [variable 설정](#3.3)  
-  3.4. [Storageclass Default 설정](#3.4)  
-  3.5. [Sidecar values 생성](#3.5)  
-  3.6. [Sidecar 배포 YAML 생성](#3.6)  
-  3.7. [Sidecar 설치](#3.7)  
-  　※ [AWS 기반 Sidecar 설치 시 LoadBalancer 도메인 연결](#3.7.1)  
-  3.8. [Sidecar 로그인 및 테스트 앱 배포](#3.8)  
-    ※ [(참고) Sidecar 삭제](#3.8.1)  
+3. [PaaS-TA Sidecar Installation](#3)  
+  3.1. [Introduction to Executable Files](#3.1)  
+  3.2. [Download Executable Files](#3.2)  
+  3.3. [variable Settings](#3.3)  
+  3.4. [Storageclass Default Settings](#3.4)  
+  3.5. [Create Sidecar Values](#3.5)  
+  3.6. [Create Sidecar Deployment YAML](#3.6)  
+  3.7. [Sidecar Installation](#3.7)  
+  　※ [LoadBalancer Domain Connection During AWS-Based Sidecar Installation](#3.7.1)  
+  3.8. [Sidecar Login and Deployment of Test App](#3.8)  
+    ※ [(Refer) Sidecar Deletion](#3.8.1)  
 
-# <div id='1'> 1. 문서 개요
-## <div id='1.1'> 1.1. 목적
-본 문서는 PaaS-TA Container-Platform 단독 배포 시 사용되는 Kubespray로 Kubenetes Cluster를 구성하고 해당 환경에서 PaaS-TA Sidecar(이하 Sidecar)를 설치하기 위한 가이드를 제공하는 데 목적이 있다.
-
-<br>
-
-## <div id='1.2'> 1.2. 범위
-본 문서는 [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [paas-ta-container-platform v1.1.0](https://github.com/PaaS-TA/paas-ta-container-platform/tree/v1.1.0)을 기준으로 작성하였다.    
-본 문서는 AWS, Openstack 환경에 PaaS-TA Container-Platform 단독 배포(Kubespray)를 활용하여 Kubernetes Cluster를 구성 후 Sidecar 설치 기준으로 작성하였다.  
-본 문서는 IaaS, Kubernetes에 대한 기본 이해도가 있다는 전제하에 가이드를 진행하였다.  
+# <div id='1'> 1. Document Outline
+## <div id='1.1'> 1.1. Purpose
+The purpose of this document is to provide a guide for configuring the Kubenetes Cluster with Kubespray used for exclusive deployment of PaaS-TA Container-Platform and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) in the environment.
 
 <br>
 
+## <div id='1.2'> 1.2. Range
+This Document was written based on [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [paas-ta-container-platform v1.1.0](https://github.com/PaaS-TA/paas-ta-container-platform/tree/v1.1.0).    
+This document is based on the installation of Sidecar after configuring the Kubernetes Cluster by utilizing PaaS-TA Container-Platform Single Distribution (Kubespray) in AWS and Openstack environments.  
+This document was guided on the premise that there was a basic understanding of IaaS and Kubernetes.  
 
-## <div id='1.3'> 1.3. 참고자료
-PaaS-TA 컨테이너 플랫폼 : [https://github.com/PaaS-TA/paas-ta-container-platform](https://github.com/PaaS-TA/paas-ta-container-platform)  
+<br>
+
+
+## <div id='1.3'> 1.3. References
+PaaS-TA Container Platform : [https://github.com/PaaS-TA/paas-ta-container-platform](https://github.com/PaaS-TA/paas-ta-container-platform)  
 Kubespray : [https://kubespray.io](https://kubespray.io)  
 Kubespray github : [https://github.com/kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray)  
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
@@ -59,29 +59,29 @@ cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)
 
 <br>
 
-# <div id='2'> 2. Kubespray 사용 Kubernetes Cluster 구성
-기본적인 Kubernetes Cluster 구성방법은 PaaS-TA Container Platform 단독 배포 설치 가이드를 따라가되 일부 옵션이나 IaaS상에서 수정할 부분이 존재한다.
-본 가이드의 Kubernetes Cluster 구성은 위 링크된 단독 배포 설치 가이드를 간략하게 수정하였기 때문에 Kubernetes Cluster 구성에 대한 상세 설명은 링크된 단독 배포 설치 가이드를 참고한다.
+# <div id='2'> 2. Configuring a Kubernetes Cluster with Kubespray
+The basic Kubernetes Cluster configuration method follows the PaaS-TA Container Platform solo deployment installation guide, but there are some options or parts to be modified on IaaS.
+Since the Kubernetes Cluster configuration in this guide has been briefly modified in the linked standalone deployment installation guide, see the linked standalone deployment installation guide for a detailed description of the Kubernetes Cluster configuration.
 
 <br>
 
 ## <div id='2.1'> 2.1. Prerequisite
-Kubernetes Cluster 구성을 위한 주요 소프트웨어 및 패키지 Version 정보는 PaaS-TA Container Platform 단독 배포 설치 가이드에서 확인 가능하다.  
-추가로 cf-for-k8s 공식 문서에서는 Kubernetes Cluster 요구 조건을 다음과 같이 권고하고 있다.
+Key software and package version information for Kubernetes Cluster configuration can be found in the PaaS-TA Container Platform Standalone Deployment Installation Guide.  
+In addition, the cf-for-k8s official document recommends the Kubernetes Cluster requirements as follows.
 - Kubernetes version : 1.19 ~ 1.22
-- 최소 5 노드
-- 노드 당 최소 4 CPU, 15GB Memory
-- Network Policies를 지원하는 CNI Plugin 보유
-- LoadBalancer Service 지원
-- Default StorageClass 지정
-- OCI 호환 레지스트리 제공 (e.g. [Docker Hub](https://hub.docker.com/), [Google container registry](https://cloud.google.com/container-registry),  [Azure container registry](https://hub.docker.com/), [Harbor](https://goharbor.io/), etc....)  
-  본 가이드는 Docker Hub 기준으로 가이드가 진행된다. (계정가입 필요)
+- At least 5 nodes
+- Minimum 4 CPUs per node, 15GB Memory
+- Have CNI Plugin with Network Policies
+- LoadBalancer Service Provided
+- Default StorageClass Set
+- Provides OCI-compliant registry (e.g. [Docker Hub](https://hub.docker.com/), [Google container registry](https://cloud.google.com/container-registry),  [Azure container registry](https://hub.docker.com/), [Harbor](https://goharbor.io/), etc....)  
+  This guide is based on the Docker Hub. (Account registration required)
 
 <br>
 
-## <div id='2.2'> 2.2. AWS 설정 (AWS 환경 사용 시)
-AWS에 Sidecar용도의 Kubernetes Cluster를 구성 할 경우 LoadBalancer나 Storage의 사용을 위하여 Cluster를 구성하는 인스턴스에 IAM 권한이 필요하다.
-- IAM 역할을 생성하고 다음 정책을 추가한 뒤, 인스턴스 생성 시 적용한다. (IAM 설정에 관한 보충설명을 확인할 경우 하단의 AWS IAM 설정을 참고한다.)
+## <div id='2.2'> 2.2. AWS Settings (When Using AWS Environment)
+When configuring a Kubernetes Cluster for Sidecar on AWS, IAM authorization is required on the instance that configures the cluster for use with LoadBalancer or Storage.
+- Create an IAM role, add the following policy, and apply it when creating an instance. (Refer to AWS IAM settings below when checking the supplementary explanation regarding IAM settings.)
 ```
 # iam_policy.json
 
@@ -139,7 +139,7 @@ AWS에 Sidecar용도의 Kubernetes Cluster를 구성 할 경우 LoadBalancer나 
 }
 ```
 
-- 클러스터를 구성할 **인스턴스**와 사용되는 **서브넷**의 태그에 다음과 같은 태그를 추가한다.
+- Add the following tags to the **instance** to configure the cluster and the **subnet** tags used.
 ```
 key = kubernetes.io/cluster/{cluster_name}
 value = member
@@ -148,42 +148,42 @@ value = member
 
 <br>
 
-### <div id='2.2.1'> ※ (참고) AWS IAM 설정
-AWS IAM 설정 방법을 기술하였다.  
+### <div id='2.2.1'> ※ (Refer) AWS IAM Settings
+It describes how to set up AWS IAM.  
 
-- AWS IAM 메뉴 - 역할 메뉴에서 역할 만들기을 선택한다.  
+- AWS IAM Menu - From the Roles menu, select Create Role.  
 ![IAM_01](./images/sidecar/IAM_01.PNG)
   
-- 역할 만들기를 진행하여 정책 생성을 선택한다.  
+- Proceed to Create Role to select Create Policy.  
 ![IAM_02](./images/sidecar/IAM_02.PNG)
   
-- JSON을 선택하여 상단의 iam_policy.json를 붙여넣고 진행한다.  
+- Select JSON and paste iam_policy.json at the top.  
 ![IAM_03](./images/sidecar/IAM_03.PNG)
   
-- 정책을 생성 후 역할 만들기로 돌아가 생성한 정책을 선택한다.  
+- After creating a policy, return to Create Role to select the policy created.  
 ![IAM_04](./images/sidecar/IAM_04.PNG)
   
-- 이름을 정하고 역할 만들기를 완료한다.  
+- Name it and complete the role.  
 ![IAM_05](./images/sidecar/IAM_05.PNG)
   
-- EC2 인스턴스를 구성시 IAM 역할에 만들었던 역할을 선택한다.  
+- Select the role that you created in the IAM role when configuring the EC2 instance.  
 ![IAM_06](./images/sidecar/IAM_06.PNG)
   
-- 만약 인스턴스를 구성 완료했는데 IAM을 설정 안했다면, 인스턴스 - 작업 - 보안 - IAM 역할 수정을 선택하여 만들었던 역할을 선택후 인스턴스를 재 부팅한다.  
+- If you have configured the instance and you have not set up the IAM, select the role you created by selecting Modify Instance - Task - Security - IAM Role and reboot the instance.  
 ![IAM_07](./images/sidecar/IAM_07.png)
   
 <br>
   
-## <div id='2.3'> 2.3. SSH Key 생성 및 배포
-SSH Key 생성 및 배포 이후의 모든 설치과정은 Master Node에서 진행한다.
+## <div id='2.3'> 2.3. Create and Deploy SSH Keys
+All installation processes after SSH key generation and deployment are performed at the Master Node.
 
-- Master Node에 접속하여 RSA 공개키를 생성한다.
+- Access the Master Node to generate an RSA public key.
 ```
 $ ssh-keygen -t rsa
 Generating public/private rsa key pair.
-Enter file in which to save the key (/home/ubuntu/.ssh/id_rsa): [엔터키 입력]
-Enter passphrase (empty for no passphrase): [엔터키 입력]
-Enter same passphrase again: [엔터키 입력]
+Enter file in which to save the key (/home/ubuntu/.ssh/id_rsa): [Enter]
+Enter passphrase (empty for no passphrase): [Enter]
+Enter same passphrase again: [Enter]
 Your identification has been saved in /home/ubuntu/.ssh/id_rsa.
 Your public key has been saved in /home/ubuntu/.ssh/id_rsa.pub.
 The key fingerprint is:
@@ -202,7 +202,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 ```
 
-- 사용할 Master, Worker Node에 공개키를 복사한다.
+- Copy the public key to the Master, Worker Node to use.
 ```
 ## 출력된 공개키 복사
 
@@ -647,6 +647,7 @@ external_db_cert_path=support-files/db.ca                   # if DB use cert -->
 | public_ip | LoadBalancer의 IP(클라우드 공급자가 제공하는 로드밸런서가 IP를 사용할 경우 설정) <br> (e.g. Openstack의 Octavia 사용 시) |
 | storageclass_name | 사용할 Storageclass (Openstack : cinder-csi, AWS : ebs-sc) |
 | app_registry_kind | Registry 종류 (dockerhub, private) |
+| app_registry_repository | Repository 이름 (dockerhub 사용 시 app_registry_id와 같은 값을 입력) |
 | app_registry_address | app_registry_kind가 private일 경우 Registry 주소 입력 |
 | use_external_blobstore | 외부 블롭스토어(minIO)를 사용할 경우 (true, false)|
 | use_external_db | 외부 데이터베이스(postgres, mysql)를 사용할 경우 (true, false) |
@@ -954,4 +955,4 @@ $ source delete-sidecar.sh
 <br>
 
   
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
+### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
