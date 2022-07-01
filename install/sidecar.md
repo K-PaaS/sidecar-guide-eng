@@ -38,7 +38,7 @@
 
 # <div id='1'> 1. Document Outline
 ## <div id='1.1'> 1.1. Purpose
-The purpose of this document is to provide a guide for configuring the Kubenetes Cluster with Kubespray used for exclusive deployment of PaaS-TA Container-Platform and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) in the environment.
+The purpose of this document is to provide a guide for configuring the Kubernetes Cluster with Kubespray used for exclusive deployment of PaaS-TA Container-Platform and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) in the environment.
 
 <br>
 
@@ -229,7 +229,7 @@ $ git clone https://github.com/PaaS-TA/paas-ta-container-platform-deployment.git
 <br>
 
 ## <div id='2.5'> 2.5. Ubuntu, Python Package Installation
-Install Python packages such as Ansible and Jinja, which are necessary for Kubespray installation..
+Install Python packages such as Ansible and Jinja, which are necessary for Kubespray installation.
 
 - Perform apt-get update.
 ```
@@ -364,7 +364,7 @@ cloud_provider: aws
 ...
 ```
 
-- Add settings for EBS when using AWS environment with EBS.  
+- Add settings for EBS when using the AWS environment with EBS.  
 ```
 $ vi inventory/mycluster/group_vars/all/aws.yml
 
@@ -413,7 +413,7 @@ $ ansible-playbook -i ./inventory/mycluster/inventory.ini ./cluster.yml -e ansib
 <br>
 
 ### <div id='2.8.2'> 2.8.2. Openstack
-When using the Openstack environment, proceed in the same way as the existing Container-Platform solo deployment installation guide.
+When using the OpenStack environment, proceed in the same way as the existing Container-Platform solo deployment installation guide.
 - Update the Ansible inventory file to the inventory builder.
 ```
 ## {MASTER_NODE_IP}, {WORKER_NODE_IP} : Master, Worker Node Private IP
@@ -560,12 +560,12 @@ $ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=roo
 | utils-install.sh | Tool installation script used when installing and utilizing Sidecar | ytt, kapp, bosh cli, cf cli installation |
 | variables.yml | Variable settings file to apply when installing Sidecar ||
 | 1.storageclass-config.sh | Script defining Storageclass to be used when installing Sidecar as default ||
-| 2.generate-values.sh | Script to generate Manifest with password, certificate, and other settings to use when installing Sidecar ||
+| 2.generate-values.sh | Script to generate Manifest with a password, certificate, and other settings to use when installing Sidecar ||
 | 3.rendering-values.sh | Script to generate YAML using Manifest with password, certificate, etc. settings ||
 | 4.deploy-sidecar.sh | Script to install Sidecar using the generated YAML ||
 | delete-sidecar.sh | Script to delete Sidecar ||
 | deploy-ebs-sc.sh | Script to deploy EBS Storageclass | Apply when using AWS EBS|
-| deploy-inject-self-signed-cert.sh | Secondary script to inserts a CA into the POD when using the Private Registry with a self-signed certificate | Check the description inside the  deploy-inject-self-signed-cert.sh file or refer to [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) for detailed guide |
+| deploy-inject-self-signed-cert.sh | Secondary script to insert a CA into the POD when using the Private Registry with a self-signed certificate | Check the description inside the deploy-inject-self-signed-cert.sh file or refer to [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) for detailed guide |
 | delete-inject-self-signed-cert.sh | Script to delete inject-self-signed-cert |  |
 | install-test.sh | Scripts to deploy and verify Test App after installation ||
 
@@ -573,7 +573,7 @@ $ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=roo
 
 ## <div id='3.2'> 3.2. Download Executable Files
 
-- Using the git clone command, download sidecar from the following path. The version of sidecar in this guide is beta2.
+- Using the git clone command, download sidecar from the following path. The version of the sidecar in this guide is beta2.
 ```
 $ cd $HOME
 $ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b beta2
@@ -683,7 +683,7 @@ storageclass.storage.k8s.io/ebs-sc patched
 
 <br>
 
-- Verify the storage class to use if its set to default.
+- Verify the storage class to use if it's set to default.
 ```
 $ kubectl get sc 
 NAME               PROVISIONER       RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
@@ -818,7 +818,7 @@ kpack          kpack-webhook-7b57486ddf-zwfnx                2/2     Running    
 <br>
 
 ### <div id='3.7.1'> ※ LoadBalancer Domain Connection During AWS-Based Sidecar Installation
-When using AWS' LoadBalancer, a domain connection using Route53 is required.
+When using AWS LoadBalancer, a domain connection using Route53 is required.
 - Check AWS LoadBalancer Name
 
 ```
@@ -887,10 +887,10 @@ $ cf create-space test-space
 Creating space test-space in org system as admin...
 OK
 
-Assigning role SpaceManager to user admin in org system / space test-space as admin...
+Assigning role SpaceManager to user admin in org system/space test-space as admin...
 OK
 
-Assigning role SpaceDeveloper to user admin in org system / space test-space as admin...
+Assigning role SpaceDeveloper to user admin in org system/space test-space as admin...
 OK
 
 TIP: Use 'cf target -o "system" -s "test-space"' to target new space
