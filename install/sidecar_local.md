@@ -2,35 +2,35 @@
 
 ## Table of Contents
 
-1. [문서 개요](#1)  
-  1.1. [목적](#1.1)  
-  1.2. [범위](#1.2)  
-  1.3. [참고자료](#1.3)  
+1. [Document Outline](#1)  
+  1.1. [Purpose](#1.1)  
+  1.2. [Range](#1.2)  
+  1.3. [References](#1.3)  
 
-2. [PaaS-TA Sidecar - local 설치](#2)  
+2. [PaaS-TA Sidecar - local Installation](#2)  
   2.1. [Prerequisite](#2.1)  
-  2.2. [설치 파일 다운로드](#2.2)  
-  2.3. [실행 파일 소개 및 설치](#2.3)  
-  2.4. [Local Kubernetes Cluster 구성](#2.4)  
+  2.2. [Download Installation File](#2.2)  
+  2.3. [Introduction and Installation of Executable Files](#2.3)  
+  2.4. [Local Kubernetes Cluster Configuration](#2.4)  
   　2.4.1 [kind](#2.4.1)  
   　2.4.2 [minikube](#2.4.2)  
-  2.5. [Sidecar 설치](#2.5)  
+  2.5. [Sidecar Installation](#2.5)  
   　2.5.1 [kind](#2.5.1)  
   　2.5.2 [minikube](#2.5.2)  
 
-# <div id='1'> 1. 문서 개요
-## <div id='1.1'> 1.1. 목적
-본 문서는 Local Kubenetes Cluster를 구성하고 해당 환경에서 PaaS-TA Sidecar(이하 Sidecar)를 설치하기 위한 가이드를 제공하는 데 목적이 있다.
+# <div id='1'> 1. Document Outline
+## <div id='1.1'> 1.1. Purpose
+The purpose of this document is to provide a guide for configuring a Local Kubenetes Cluster and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) to a specified environment.
 
 <br>
 
-## <div id='1.2'> 1.2. 범위
-본 문서는 [cf-for-k8s v5.4.1](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.1)을 기준으로 작성하였다.  
-본 문서는 [kind](https://kind.sigs.k8s.io/) 혹은 [minikube](https://minikube.sigs.k8s.io/docs/)로 Local Kubernetes Cluster를 구성 후 Sidecar 설치 기준으로 작성하였다.
+## <div id='1.2'> 1.2. Range
+This document was written based on [cf-for-k8s v5.4.1](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.1).  
+This document is based on the installation of Sidecar after configuring the Local Kubernetes Cluster with [kind](https://kind.sigs.k8s.io/) or [minikube](https://minikube.sigs.k8s.io/docs/).
 
 <br>
 
-## <div id='1.3'> 1.3. 참고자료
+## <div id='1.3'> 1.3. References
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
 cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
 kind Document :  [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)  
@@ -38,19 +38,19 @@ minikube Document : [https://minikube.sigs.k8s.io/docs/](https://minikube.sigs.k
 
 <br>
 
-# <div id='2'> 2. PaaS-TA Sidecar - local 설치
+# <div id='2'> 2. PaaS-TA Sidecar - local Installation
 ## <div id='2.1'> 2.1. Prerequisite
-cf-for-k8s 공식 문서에서는 Local Kubernetes Cluster 요구 조건을 다음과 같이 권고하고 있다.
-- 최소 4 CPU, 6GB Memory
-- 권장 6-8 CPU, 8-16GB Memory
-- OCI 호환 레지스트리 제공 (e.g. [Docker Hub](https://hub.docker.com/), [Google container registry](https://cloud.google.com/container-registry),  [Azure container registry](https://hub.docker.com/), [Harbor](https://goharbor.io/), etc....)  
-  본 가이드는 Docker Hub 기준으로 가이드가 진행된다. (계정가입 필요)
+The cf-for-k8s official document recommends the Local Kubernetes Cluster requirements as follows.
+- At least 4 CPU, 6GB Memory
+- Recommend 6-8 CPU, 8-16GB Memory
+- Provides OCI-compliant registry (e.g. [Docker Hub](https://hub.docker.com/), [Google container registry](https://cloud.google.com/container-registry),  [Azure container registry](https://hub.docker.com/), [Harbor](https://goharbor.io/), etc....)  
+  This guide is based on the Docker Hub. (Account registration required)
 
 <br>
 
-## <div id='2.2'> 2.2. 설치 파일 다운로드
+## <div id='2.2'> 2.2. Download Installation File
 
-- git clone 명령을 통해 다음 경로에서 Sidecar 다운로드를 진행한다. 본 설치 가이드에서의 Sidecar의 버전은 베타 버전이다.
+- Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is beta.
 ```
 $ cd $HOME
 $ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b beta
@@ -59,25 +59,25 @@ $ cd sidecar-deployment
 
 <br>
 
-## <div id='2.3'> 2.3. 실행 파일 소개 및 설치
+## <div id='2.3'> 2.3. Introduction and Installation of Executable Files
 
-- Sidecar를 설치 & 활용하기 위해선 다음과 같은 실행파일이 필요하다.
+- The following executable files are required to install and utilize Sidecar.
 
-| 이름   |      설명      |
+| Name   |      Description      |
 |----------|-------------|
-| [ytt](https://carvel.dev/ytt/) | Sidecar을 배포 시 사용 되는 YAML을 생성하는 툴 |
-| [kapp](https://carvel.dev/kapp/) | Sidecar의 라이프사이클을 관리하는 툴 |
-| [kubectl](https://github.com/kubernetes/kubectl) | Kubernetes Cluster를 제어하는 툴 |
-| [bosh cli](https://github.com/cloudfoundry/bosh-cli) | Sidecar에서 사용될 임의의 비밀번호와 certificate를 생성하는 툴 |
-| [cf cli](https://github.com/cloudfoundry/cli) (v7+) | Sidecar와 상호 작용하는 툴 |
-| [docker](https://www.docker.com/) | 컨테이너 기반의 가상화 플랫폼 |
+| [ytt](https://carvel.dev/ytt/) | Tools to create YAMLs used when deploying Sidecar |
+| [kapp](https://carvel.dev/kapp/) | Tools to manage the lifecycle of Sidecar |
+| [kubectl](https://github.com/kubernetes/kubectl) | Tool to control Kubernetes Cluster |
+| [bosh cli](https://github.com/cloudfoundry/bosh-cli) | Tools for generating arbitrary passwords and certificates to be used by Sidecar |
+| [cf cli](https://github.com/cloudfoundry/cli) (v7+) | Tools that interact with Sidecar |
+| [docker](https://www.docker.com/) | Container-based virtualization platform |
 
-- ytt, kapp, bosh cli, cf cli 설치
+- ytt, kapp, bosh cli, cf cli installation
 ```
 $ source install-scripts/utils-install.sh
 ```
 
-- docker 설치
+- docker installation
 ```
 $ sudo wget -qO- http://get.docker.com/ | sh
 $ sudo chmod 666 /var/run/docker.sock 
@@ -85,7 +85,7 @@ $ docker -v
 Docker version 20.10.9, build c2ea9bc
 ```
 
-- kubectl 설치
+- kubectl installation
 ```
 $ sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
 $ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -98,11 +98,11 @@ Client Version: version.Info{Major:"1", Minor:"22", GitVersion:"v1.22.2", GitCom
 
 <br>
 
-## <div id='2.4'> 2.4. Local Kubernetes Cluster 구성
-본 가이드에서 제공되는 cluster 구성 도구 kind와 minikube를 선택하여 진행한다.  
+## <div id='2.4'> 2.4. Local Kubernetes Cluster Configuration
+Proceed by selecting the cluster configuring tool which is kind and minikube provided from this guide.  
 ### <div id='2.4.1'> 2.4.1. kind
 
-- kind 다운로드
+- kind Download
 ```
 $ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
 $ chmod +x ./kind
@@ -111,7 +111,7 @@ $ kind --version
 kind version 0.10.0
 ```
 
-- cluster 생성
+- Create cluster
 ```
 $ kind create cluster --config=./deploy/kind/cluster.yml --image kindest/node:v1.20.2
 $ kubectl cluster-info --context kind-kind
@@ -123,7 +123,7 @@ KubeDNS is running at https://127.0.0.1:43173/api/v1/namespaces/kube-system/serv
 
 ### <div id='2.4.2'> 2.4.2. minikube
 
-- minikube 다운로드
+- minikube Download
 ```
 $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 $ sudo install minikube-linux-amd64 /usr/local/bin/minikube
@@ -131,7 +131,7 @@ $ minikube version
 minikube version: v1.23.2
 ```
 
-- cluster 생성
+- Create cluster
 ```
 $ minikube start --cpus=6 --memory=8g --kubernetes-version="1.20.2" --driver=docker
   
@@ -143,16 +143,16 @@ KubeDNS is running at https://192.168.49.2:8443/api/v1/namespaces/kube-system/se
 
 <br>
 
-## <div id='2.5'> 2.5. Sidecar 설치
+## <div id='2.5'> 2.5. Sidecar Installation
 ### <div id='2.5.1'> 2.5.1. kind
 
-- Sidecar에서 사용할 변수(비밀번호, 인증키 등)를 생성한다.
+- Generate variables (password, authentication key, etc.) to be used by Sidecar.
 ```
 $ mkdir ./tmp
 $ ./hack/generate-values.sh -d vcap.me > ./tmp/sidecar-values.yml
 
 
-# cat << 부터 EOF 마지막까지 한번에 실행 (app_registry 정보 변경 필요)
+# Run from cat << to EOF last at once (app_registry information needs to be changed)
 ########################################################
 $ cat << EOF >> ./tmp/sidecar-values.yml
 app_registry:
@@ -172,9 +172,9 @@ EOF
 ########################################################
 ```
 
-- 변수 설정파일은 tmp/sidecar-values.yml에 생성된다.
+- The variable setting file is created in tmp/sidecar-values.yml.
 ```
-# 설정파일 : ./tmp/sidecar-values.yml
+# File Set : ./tmp/sidecar-values.yml
 $ vi ./tmp/sidecar-values.yml
 
 #@data/values
@@ -207,12 +207,12 @@ remove_resource_requirements: true
 use_first_party_jwt_tokens: true
 ```
 
-- Sidecar 배포 YAML를 생성한다.
+- Create a Sidecar deployment YAML.
 ```
 $ ytt -f ./config -f "tmp/sidecar-values.yml" > "tmp/sidecar-rendered.yml"
 ```
 
-- Sidecar 배포 YAML은 tmp/sidecar-rendered.yml에 생성된다.
+- The Sidecar deployment YAML is created in tmp/sidecar-rendered.yml.
 ```
 $ vi tmp/sidecar-rendered.yml
 
@@ -228,7 +228,7 @@ kind: Config
 
 ```
 
-- 생성된 YAML파일을 이용하여 Sidecar를 설치한다.
+- Install Sidecar by using the created YAML file.
 ```
 $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 
@@ -244,7 +244,7 @@ $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 Succeeded
 ```
 
-- Sidecar가 정상설치 되었는지 샘플앱을 통해 확인한다.
+- Check if Sidecar is installed normally through the sample app.
 
 ```
 $ cf login -a api.$(grep system_domain ./tmp/sidecar-values.yml | cut -d" " -f2 | sed -e 's/\"//g') --skip-ssl-validation -u admin -p "$(grep cf_admin_password ./tmp/sidecar-values.yml | cut -d" " -f2)"
@@ -291,7 +291,7 @@ $ curl https://test-node-app.apps.$(grep system_domain ./tmp/sidecar-values.yml 
 Hello World
 ```
 
-- (참고) kind cluster 삭제
+- (Refer) kind cluster Deletion
 ```
 $ kind delete cluster
 ```
@@ -301,7 +301,7 @@ $ kind delete cluster
 
 
 ### <div id='2.5.2'> 2.5.2. minikube
-- Metrics-server를 활성화 한다.
+- Enable Metrics-server.
 ```
 $ minikube addons enable metrics-server
 ```
