@@ -20,7 +20,7 @@
 
 # <div id='1'> 1. Document Outline
 ## <div id='1.1'> 1.1. Purpose
-The purpose of this document is to provide a guide for configuring a Local Kubenetes Cluster and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) to a specified environment.
+The purpose of this document is to provide a guide for configuring a Local Kubernetes Cluster and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) to a specified environment.
 
 <br>
 
@@ -306,20 +306,20 @@ $ kind delete cluster
 $ minikube addons enable metrics-server
 ```
 
-- LoadBalancer Service 사용을 위한 Minikube 터널링을 한다.
+- Minikube tunneling to use LoadBalancer service.
 ```
-# 터널링 백그라운드 실행
+# Running the Tunneling Background
 $ minikube tunnel &>/dev/null &
 ```
 
 
-- Sidecar에서 사용할 변수(비밀번호, 인증키 등)를 생성한다.
+- Generate variables (password, authentication key, etc.) to be used by Sidecar.
 ```
 $ mkdir ./tmp
 $ ./hack/generate-values.sh -d $(minikube ip).nip.io > ./tmp/sidecar-values.yml
 
 
-# cat << 부터 EOF 마지막까지 한번에 실행 (app_registry 정보 변경 필요)
+# Run from cat << to EOF last at once (app_registry information needs to be changed)
 ########################################################
 $ cat << EOF >> ./tmp/sidecar-values.yml
 app_registry:
@@ -335,9 +335,9 @@ EOF
 ########################################################
 ```
 
-- 변수 설정파일은 tmp/sidecar-values.yml에 생성된다.
+- The variable setting file is created in tmp/sidecar-values.yml.
 ```
-# 설정파일 : ./tmp/sidecar-values.yml
+# Setting file : ./tmp/sidecar-values.yml
 $ vi ./tmp/sidecar-values.yml
 
 #@data/values
@@ -366,12 +366,12 @@ remove_resource_requirements: true
 use_first_party_jwt_tokens: true
 ```
 
-- Sidecar 배포 YAML를 생성한다.
+- Create Sidecar Deployment YAML.
 ```
 $ ytt -f ./config -f "tmp/sidecar-values.yml" > "tmp/sidecar-rendered.yml"
 ```
 
-- Sidecar 배포 YAML은 tmp/sidecar-rendered.yml에 생성된다.
+- Sidecar deployment YAML is created in tmp/sidecar-rendered.yml.
 ```
 $ vi tmp/sidecar-rendered.yml
 
@@ -387,7 +387,7 @@ kind: Config
 
 ```
 
-- 생성된 YAML파일을 이용하여 sidecar를 설치한다.
+- Install the sidecar using the generated YAML file.
 ```
 $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 
@@ -401,7 +401,7 @@ $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 Succeeded
 ```
 
-- Sidecar가 정상설치 되었는지 샘플앱을 통해 확인한다.
+- Check if Sidecar is installed normally through the sample app.
 
 ```
 $ cf login -a api.$(grep system_domain ./tmp/sidecar-values.yml | cut -d" " -f2 | sed -e 's/\"//g') --skip-ssl-validation -u admin -p "$(grep cf_admin_password ./tmp/sidecar-values.yml | cut -d" " -f2)"
@@ -449,12 +449,12 @@ Hello World
 ```
   
   
-- (참고) Minikube cluster 삭제
+- (Refer) Minikube cluster Deletion
 ```
-# minikube tunnel process 종료
+# minikube tunnel process terminate
 $ kill -9 $(ps -ef | grep "minikube tunnel" | awk '{print $2}' | head -n 1)
   
-# Minikube cluster 삭제
+# Minikube cluster deletion
 $ minikube delete
 ```
 
