@@ -573,7 +573,7 @@ $ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=roo
 
 ## <div id='3.2'> 3.2. Download Executable Files
 
-- git clone 명령을 통해 다음 경로에서 Sidecar 다운로드를 진행한다. 본 설치 가이드에서의 Sidecar의 버전은 beta2 버전이다.
+- Using the git clone command, download sidecar from the following path. The version of sidecar in this guide is beta2.
 ```
 $ cd $HOME
 $ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b beta2
@@ -582,14 +582,14 @@ $ cd sidecar-deployment/install-scripts
 
 <br>
 
-- utils-install.sh 파일을 실행하여 Sidecar 설치 시 필요한 실행 파일을 설치한다.
+- Run the utils-install.sh file and install the files needed for Sidecar installation.
 ```
 $ source utils-install.sh
 ```
 <br>
 
-## <div id='3.3'> 3.3. variable 설정
-- variables.yml 파일을 편집하여 Sidecar 설치 시 옵션들을 설정한다.
+## <div id='3.3'> 3.3. variable Settings
+- Edit the variable.yml file to set options for Sidecar installation.
 ```
 $ vi variables.yml
 
@@ -638,34 +638,34 @@ external_uaa_db_name=uaa                                    # UAA DB Name
 external_db_cert_path=support-files/db.ca                   # if DB use cert --> add the contents of the db.ca file
                                                             # if DB don't use cert --> db.ca is empty
 ```
-- 주요 변수의 설명은 다음과 같다.
+- The main variables are described as follows.
 
-| 이름   |      설명      |
+| Name   |      Description      |
 |----------|-------------|
-| iaas | Cluster가 구성된 IaaS (aws, openstack) |
-| system_domain | Sidecar의 도메인(LoadBalancer와 연결되는 Domain) |
-| use_lb | LoadBalancer 사용 여부 (사용 안할 시 system_domain을 Cluster Worker중 하나의 PublicIP와 연결된 system_domain으로 설정) <br> (e.g. Cluster Worker Floating IP : 3.50.50.50 -> system_domain : 3.50.50.50.nip.io 혹은 연결된 도메인 설정)|
-| public_ip | LoadBalancer의 IP(클라우드 공급자가 제공하는 로드밸런서가 IP를 사용할 경우 설정) <br> (e.g. Openstack의 Octavia 사용 시) |
-| storageclass_name | 사용할 Storageclass (Openstack : cinder-csi, AWS : ebs-sc) |
-| app_registry_kind | Registry 종류 (dockerhub, private) |
-| app_registry_repository | Repository 이름 (dockerhub 사용 시 app_registry_id와 같은 값을 입력) |
-| app_registry_address | app_registry_kind가 private일 경우 Registry 주소 입력 |
-| use_external_blobstore | 외부 블롭스토어(minIO)를 사용할 경우 (true, false)|
-| use_external_db | 외부 데이터베이스(postgres, mysql)를 사용할 경우 (true, false) |
+| iaas | A Cluster-configured IaaS (aws, openstack) |
+| system_domain | Domain of Sidecar(A domain that can be connected with LoadBalancer) |
+| use_lb | LoadBalancer enabled (Set system_domain to system_domain associated with PublicIP in one of the Cluster Workers when disabled) <br> (e.g. Cluster Worker Floating IP : 3.50.50.50 -> system_domain : 3.50.50.50.nip.io or set the connected domain)|
+| public_ip | IP of LoadBalancer(Set up when the load balancer provided by the cloud provider uses IP) <br> (e.g. When using Octavia of Openstack) |
+| storageclass_name | Storageclass to use (Openstack : cinder-csi, AWS : ebs-sc) |
+| app_registry_kind | Registry type (dockerhub, private) |
+| app_registry_repository | Repository name (Enter a value such as app_registry_id when using dockerhub) |
+| app_registry_address | Enter Registry address if app_registry_kind is private |
+| use_external_blobstore | when using an external blobstore (minIO)(true, false) |
+| use_external_db | When using an external database (postgres, mysql) (true, false) |
 
 <br>
 
-## <div id='3.4'> 3.4. Storageclass Default 설정
-Sidecar를 설치하기 위해서는 사용 중인 Storageclass를 default 설정 할 필요가 있다.
+## <div id='3.4'> 3.4. Storageclass Default Settings
+In order to install Sidecar, it is necessary to set the default storage class in use.
 
-- AWS 사용 시 EBS를 사용한다면 EBS Storageclass를 배포한다.  
+- If EBS is used when using AWS, deploy EBS Storage Class.  
 ```
 $ source deploy-ebs-sc.sh
 ```
 <br>
 
     
-- 사용하려는 StorageClass를 확인한다.
+- Check the StorageClass to use.
 ```
 $ kubectl get sc 
 NAME               PROVISIONER       RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
@@ -674,7 +674,7 @@ ebs-sc             ebs.csi.aws.com   Delete          WaitForFirstConsumer   fals
   
 <br>
   
-- variables.yml에 storageclass_name 입력했다면 StorageClass의 default 사용을 위해 다음 스크립트를 실행한다.
+- If you entered storageclass_name in variables.yml, run the following script to use the default for StorageClass.
     
 ```
 $ source 1.storageclass-config.sh
@@ -683,7 +683,7 @@ storageclass.storage.k8s.io/ebs-sc patched
 
 <br>
 
-- 사용하려는 StorageClass가 default 설정이 되었는지 확인한다.
+- Verify the storage class to use if its set to default.
 ```
 $ kubectl get sc 
 NAME               PROVISIONER       RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
@@ -692,16 +692,16 @@ ebs-sc (default)   ebs.csi.aws.com   Delete          WaitForFirstConsumer   fals
   
 <br>
 
-## <div id='3.5'> 3.5. Sidecar values 생성
-- Sidecar 설치 시 사용 할 values를 생성하는 스크립트를 실행한다.  
-  (설치 중 variables.yml을 수정하였다면 2.generate-values.sh부터 재시작 한다.)
+## <div id='3.5'> 3.5. Create Sidecar values
+- Runs a script that creates values to use when installing Sidecar.  
+  (If variables.yml was modified during installation restart with 2.generate-values.sh.)
 ```
 $ source 2.generate-values.sh
 ```
 <br>
 
-- Manifest 파일은 manifest/sidecar-values.yml 에 생성되며 각종 values를 확인, 수정 가능하다.   
-  (사용 가능한 변수는 [링크](https://cf-for-k8s.io/docs/platform_operators/config-values/) 에서 확인한다.)
+- The Manifest file is created in manifest/sidecar-values.yml, and various values can be checked and modified.   
+  (Check the available variables from the [Link](https://cf-for-k8s.io/docs/platform_operators/config-values/).)
 
 ```
 $ vi manifest/sidecar-values.yml
@@ -731,16 +731,16 @@ app_registry:
 
 <br>
 
-## <div id='3.6'> 3.6. Sidecar 배포 YAML 생성
+## <div id='3.6'> 3.6. Create Sidecar Deployment YAML
 
-- 만들어진 sidecar-values.yml 파일을 이용하여 Sidecar를 설치할 YAML을 렌더링하여 생성한다.  
-  (설치 중 sidecar-values.yml을 수정하였다면 3.rendering-values.sh부터 재시작 한다.)
+- Create a YAML to install Sidecar using the created sidecar-values.yml file.  
+  (If sidecar-values.yml was modified during installation, restart with 3.rendering-values.sh.)
 ```
 $ source 3.rendering-values.sh
 ```
 <br>
 
-- YAML 파일은 manifest/sidecar-rendered.yml에 생성되며 Kubernetes를 통해 배포되는 리소스의 확인, 수정이 가능하다.
+- The YAML file is created at the manifest/sidecar-rendered.yml. Checking of the deployed resource and modification can be done through Kubernetes.
 
 ```
 $ vi manifest/sidecar-rendered.yml
@@ -760,8 +760,8 @@ metadata:
 
 <br>
 
-## <div id='3.7'> 3.7. Sidecar 설치
-- 생성된 YAML파일을 이용하여 Sidecar를 설치한다.
+## <div id='3.7'> 3.7. Sidecar Installation
+- Install Sidecar using the generated YAML file.
 ```
 $ source 4.deploy-sidecar.sh
 
@@ -776,7 +776,7 @@ Succeeded
 
 ```
 
-- Sidecar가 정상 설치되면 POD는 다음과 같이 구성된다.
+- When Sidecar is installed normally, the POD is configured as follows:
 ```
 $ kubectl get pods -A
 
@@ -817,9 +817,9 @@ kpack          kpack-webhook-7b57486ddf-zwfnx                2/2     Running    
 
 <br>
 
-### <div id='3.7.1'> ※ AWS 기반 Sidecar 설치 시 LoadBalancer 도메인 연결
-AWS의 LoadBalancer를 사용할 경우 Route53을 이용한 도메인의 연결이 필요하다.
-- AWS LoadBalancer 이름 확인
+### <div id='3.7.1'> ※ LoadBalancer Domain Connection During AWS-Based Sidecar Installation
+When using AWS' LoadBalancer, a domain connection using Route53 is required.
+- Check AWS LoadBalancer Name
 
 ```
 $ kubectl get svc -n istio-system istio-ingressgateway
@@ -827,16 +827,16 @@ NAME                   TYPE           CLUSTER-IP      EXTERNAL-IP               
 istio-ingressgateway   LoadBalancer   10.233.28.216   a0c35cf15801c4557a9b49b3a97f86ef-1468743017.ap-northeast-2.elb.amazonaws.com   15021:32733/TCP,80:30412/TCP,443:31913/TCP,15443:31820/TCP   2h
 ```
 
-- Route53에서 호스팅 영역을 생성한 뒤 라우팅 대상에 LoadBalancer 이름(EXTERNAL-IP)를 입력하고 레코드를 생성한다.
+- After creating a hosting area on Route 53, enter the LoadBalancer name (EXTERNAL-IP) in the routing target and generate a record.
 
 ![route53](./images/sidecar/route53.PNG)
 
 <br>
 
-## <div id='3.8'> 3.8. Sidecar 로그인 및 테스트 앱 배포
-- 테스트 앱을 배포하여 앱이 정상 배포되는지 확인한다.
+## <div id='3.8'> 3.8. Sidecar Login and Deployment of Test App
+- Deploy the test app to check if the app was deployed normally.
 ```
-# 배포 자동 테스트
+# Automated Deployment Test
 $ source install-test.sh
 .......
 Waiting for app test-node-app to start...
@@ -867,7 +867,7 @@ Hello World
 
 
 
-# 배포 수동 테스트
+# Manual Deployment Test
 $ cf login -a api.$(grep system_domain ./manifest/sidecar-values.yml | cut -d" " -f2 | sed -e 's/\"//g') --skip-ssl-validation -u admin -p "$(grep cf_admin_password ./manifest/sidecar-values.yml | cut -d" " -f2)"
 
 Authenticating...
@@ -948,7 +948,7 @@ Hello World
 
 <br>
   
-### <div id='3.8.1'> ※ (참고) Sidecar 삭제
+### <div id='3.8.1'> ※ (Refer) Sidecar Deletion
 ```
 $ source delete-sidecar.sh
 ```
