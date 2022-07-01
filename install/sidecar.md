@@ -22,7 +22,7 @@
   　2.8.1 [AWS](#2.8.1)  
   　2.8.2 [Openstack](#2.8.2)  
   2.9. [Kubernetes Cluster Usage Setting & Installation Check](#2.9)  
-    ※ [(Refer) Kubespray Usage Kubernetes Cluster Deletion](#2.9.1)  
+    ※ [(Refer) Delete Kubernetes Cluster with Kubespray](#2.9.1)  
 
 3. [PaaS-TA Sidecar Installation](#3)  
   3.1. [Introduction to Executable Files](#3.1)  
@@ -430,16 +430,16 @@ declare -a IPS=(10.x.x.x 10.x.x.x 10.x.x.x 10.x.x.x)
 
 $ CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 ```
-- Openstack 환경에 설치 시 추가적인 환경변수 설정이 필요하며 설정 파일을 다운로드 받아 자동으로 환경변수 등록이 가능하다.
+- Additional environmental variables are required when installing in the Openstack environment, and environmental variables can be automatically registered by downloading the configuration file.
 ```
-## Openstack UI 로그인 > 프로젝트 선택 > API 액세스 메뉴 선택 > OpenStack RC File 다운로드 클릭
-## 스크립트 파일 실행 후 Openstack 계정 패스워드 입력
+## Openstack UI Login > Select Project > Select API Access Menu > Click OpenStack RC File Download
+## Enter Openstack account password after running script file
 
 $ source {OPENSTACK_PROJECT_NAME}-openrc.sh
-Please enter your OpenStack Password for project admin as user admin: {패스워드 입력}
+Please enter your OpenStack Password for project admin as user admin: {Enter Password}
 ```
 
-- Openstack 네트워크 인터페이스의 MTU값이 기본값 1450이 아닐 경우 CNI Plugin MTU 설정 변경이 필요하다.
+- If the MTU value of the Openstack network interface is not the default value of 1450, the CNI Plugin MTU setting needs to be changed.
 ```
 ## MTU Check (ex mtu 1400)
 
@@ -465,22 +465,22 @@ calico_mtu: 1400
 ...
 ```
 
-- Ansible playbook으로 Kubespray 배포를 진행한다. playbook은 root로 실행하도록 옵션을 지정한다. (--become-user=root)
+- - Proceed with Kubespray deployment through the Ansible playbook. Set the playbook option to run as root. (--become-user=root)
 ```
 $ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml
 ```
 <br>
 
-### <div id='2.9'> 2.9. Kubernetes Cluster 사용 설정 & 설치 확인
+### <div id='2.9'> 2.9. Kubernetes Cluster Usage Setting & Installation Check
 
-- Kubespray로 Kubernetes Cluster 구성 완료 후 Cluster 사용을 위하여 다음 과정을 실행한다.
+- After completing the Kubernetes Cluster configuration with Kubespray, perform the following steps to use the cluster.
 ```
 $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-- 설치가 정상적으로 되었는지 node와 pod를 확인한다.
+- Check node and pod to see if the installation was done properly.
 ```
 $ kubectl get nodes
 NAME                 STATUS   ROLES                  AGE   VERSION
@@ -526,52 +526,52 @@ snapshot-controller-0                         1/1     Running   0          7m33s
 
 <br>
 
-### <div id='2.9.1'> ※ (참고) Kubespray 사용 Kubernetes Cluster 삭제
-Ansible playbook을 이용하여 Kubespray 삭제를 진행한다.
+### <div id='2.9.1'> ※ (Refer) Delete Kubernetes Cluster with Kubespray
+Use Ansible playbook and delete Kubespray.
 
 ```
-# AWS 환경 사용 시
+# When using AWS environment
 $ ansible-playbook -i ./inventory/mycluster/inventory.ini ./reset.yml -e ansible_user=$(whoami) -b --become-user=root --flush-cache
 
-# Openstack 환경 사용 시
+# When using Openstack environment
 $ ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root reset.yml
 ```
 
 <br>
 
-# <div id='3'> 3. PaaS-TA Sidecar 설치
-## <div id='3.1'> 3.1. 실행파일 소개
-- Sidecar를 설치 & 활용하기 위해선 다음과 같은 실행파일이 필요하다.
+# <div id='3'> 3. PaaS-TA Sidecar Installation
+## <div id='3.1'> 3.1. Introduction to Executable Files
+- The following executable files are required to install and use the Sidecar.
 
-| 이름   |      설명      |
+| Name   |      Description      |
 |----------|-------------|
-| [ytt](https://carvel.dev/ytt/) | Sidecar를 배포 시 사용 되는 YAML을 생성하는 툴 |
-| [kapp](https://carvel.dev/kapp/) | Sidecar의 라이프사이클을 관리하는 툴 |
-| [kubectl](https://github.com/kubernetes/kubectl) | Kubernetes Cluster를 제어하는 툴 |
-| [bosh cli](https://github.com/cloudfoundry/bosh-cli) | Sidecar에서 사용될 임의의 비밀번호와 certificate를 생성하는 툴 |
-| [cf cli](https://github.com/cloudfoundry/cli) (v7+) | Sidecar와 상호 작용하는 툴 |
+| [ytt](https://carvel.dev/ytt/) | A tool to create YAML which is used when deploying Sidecar |
+| [kapp](https://carvel.dev/kapp/) | A tool that manages lifecycle of Sidecar |
+| [kubectl](https://github.com/kubernetes/kubectl) | A tool that controls Kubernetes Cluster |
+| [bosh cli](https://github.com/cloudfoundry/bosh-cli) | Tools for generating arbitrary passwords and certificates to be used by Sidecar |
+| [cf cli](https://github.com/cloudfoundry/cli) (v7+) | Tools that interact with Sidecar |
 
 <br>
 
-- Sidecar를 설치 시 사용되는 스크립트는 다음과 같다.
+- The script used to install Sidecar is as follows:
 
-| 이름   |      설명      | 비고 |
+| Name   |      Description      | Note |
 |----------|-------------|----|
-| utils-install.sh | Sidecar 설치 & 활용 시 사용되는 툴 설치 스크립트 | ytt, kapp, bosh cli, cf cli 설치 |
-| variables.yml | Sidecar 설치 시 적용하는 변수 설정 파일 ||
-| 1.storageclass-config.sh | Sidecar 설치 시 사용 할 Storageclass를 default로 정의하는 스크립트 ||
-| 2.generate-values.sh | Sidecar 설치 시 사용 할 비밀번호, certificate등의 설정을 갖고있는 Manifest를 생성하는 스크립트 ||
-| 3.rendering-values.sh | 비밀번호, certificate등의 설정을 갖고있는 Manifest를 활용해 YAML을 생성하는 스크립트 ||
-| 4.deploy-sidecar.sh | 생성된 YAML을 이용하여 Sidecar를 설치하는 스크립트 ||
-| delete-sidecar.sh | Sidecar를 삭제하는 스크립트 ||
-| deploy-ebs-sc.sh | EBS Storageclass를 배포하는 스크립트 | AWS EBS 사용 시 적용|
-| deploy-inject-self-signed-cert.sh | 자체 서명된 인증서를 사용하는 Private 레지스트리 사용 시 POD에 CA를 삽입하는 보조 스크립트 | 자세한 가이드는 deploy-inject-self-signed-cert.sh 파일 안 설명이나 [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) 참고 |
-| delete-inject-self-signed-cert.sh | inject-self-signed-cert를 삭제하는 스크립트 |  |
-| install-test.sh | 설치 후 Test App을 배포하여 확인하는 스크립트 ||
+| utils-install.sh | Tool installation script used when installing and utilizing Sidecar | ytt, kapp, bosh cli, cf cli installation |
+| variables.yml | Variable settings file to apply when installing Sidecar ||
+| 1.storageclass-config.sh | Script defining Storageclass to be used when installing Sidecar as default ||
+| 2.generate-values.sh | Script to generate Manifest with password, certificate, and other settings to use when installing Sidecar ||
+| 3.rendering-values.sh | Script to generate YAML using Manifest with password, certificate, etc. settings ||
+| 4.deploy-sidecar.sh | Script to install Sidecar using the generated YAML ||
+| delete-sidecar.sh | Script to delete Sidecar ||
+| deploy-ebs-sc.sh | Script to deploy EBS Storageclass | Apply when using AWS EBS|
+| deploy-inject-self-signed-cert.sh | Secondary script to inserts a CA into the POD when using the Private Registry with a self-signed certificate | Check the description inside the  deploy-inject-self-signed-cert.sh file or refer to [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) for detailed guide |
+| delete-inject-self-signed-cert.sh | Script to delete inject-self-signed-cert |  |
+| install-test.sh | Scripts to deploy and verify Test App after installation ||
 
 <br>
 
-## <div id='3.2'> 3.2. 실행파일 다운로드
+## <div id='3.2'> 3.2. Download Executable Files
 
 - git clone 명령을 통해 다음 경로에서 Sidecar 다운로드를 진행한다. 본 설치 가이드에서의 Sidecar의 버전은 beta2 버전이다.
 ```
