@@ -81,7 +81,7 @@ In addition, the cf-for-k8s official document recommends the Kubernetes Cluster 
 
 ## <div id='2.2'> 2.2. AWS Settings (When Using AWS Environment)
 When configuring a Kubernetes Cluster for Sidecar on AWS, IAM authorization is required on the instance that configures the cluster for use with LoadBalancer or Storage.
-- Create an IAM role, add the following policy, and apply it when creating an instance. (Refer to AWS IAM settings below when checking the supplementary explanation regarding IAM settings.)
+- Create an IAM role, add the following policy, and apply it when creating an instance. (Refer to AWS IAM settings below when checking the supplementary explanation about IAM settings.)
 ```
 # iam_policy.json
 
@@ -693,7 +693,7 @@ ebs-sc (default)   ebs.csi.aws.com   Delete          WaitForFirstConsumer   fals
 <br>
 
 ## <div id='3.5'> 3.5. Create Sidecar values
-- Runs a script that creates values to use when installing Sidecar.  
+- Execute a script that creates values to be used when installing Sidecar. 
   (If variables.yml was modified during installation restart with 2.generate-values.sh.)
 ```
 $ source 2.generate-values.sh
