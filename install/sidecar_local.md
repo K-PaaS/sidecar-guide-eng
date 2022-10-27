@@ -102,7 +102,7 @@ Client Version: version.Info{Major:"1", Minor:"22", GitVersion:"v1.22.2", GitCom
 Proceed by selecting the cluster configuring tool which is kind and minikube provided from this guide.  
 ### <div id='2.4.1'> 2.4.1. kind
 
-- kind Download
+- Download kind
 ```
 $ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.10.0/kind-linux-amd64
 $ chmod +x ./kind
@@ -123,7 +123,7 @@ KubeDNS is running at https://127.0.0.1:43173/api/v1/namespaces/kube-system/serv
 
 ### <div id='2.4.2'> 2.4.2. minikube
 
-- minikube Download
+- Download minikube
 ```
 $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 $ sudo install minikube-linux-amd64 /usr/local/bin/minikube
