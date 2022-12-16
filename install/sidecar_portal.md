@@ -160,6 +160,6 @@ portal-web-user       started           web:1/1                                 
 
 When a reliable certificate is not applied to the Sidecar, the link to access the web user portal needs to be accessed by http.  
 Refer to the link below for guides for operating and setting up the portal.  
-[Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [AP Install]([../README.md](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/README.md)) > [Portal Container Type](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/portal/container_type.md) > [PaaS-TA AP Portal 운영](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/portal/container_type.md#4)
+[Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [AP Install]([../README.md](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/README.md)) > [Portal Container Type](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/portal/container_type.md) > [PaaS-TA AP Portal Operation](https://github.com/PaaS-TA/application-platform-guide/blob/master/install/portal/container_type.md#4)
 
 ### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
