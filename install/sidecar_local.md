@@ -50,10 +50,10 @@ The cf-for-k8s official document recommends the Local Kubernetes Cluster require
 
 ## <div id='2.2'> 2.2. Download Installation File
 
-- Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is beta.
+- Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is v1.0.2.
 ```
 $ cd $HOME
-$ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b beta
+$ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b v1.0.2
 $ cd sidecar-deployment
 ```
 
