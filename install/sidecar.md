@@ -1,4 +1,4 @@
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@
   2.9. [Kubespray Installation Check](#2.9)  
     ※ [(Refer) Delete Kubespray](#2.9.1)
 
-3. [PaaS-TA Sidecar Installation](#3)  
+3. [K-PaaS Sidecar Installation](#3)  
   3.1. [Introduction to Executable Files](#3.1)  
   3.2. [Download Executable Files](#3.2)  
   3.3. [Activate Istio CNI Plugin](#3.3)  
@@ -41,20 +41,20 @@
 
 # <div id='1'> 1. Document Outline
 ## <div id='1.1'> 1.1. Purpose
-The purpose of this document is to provide a guide for configuring the Kubernetes Cluster with Kubespray used for exclusive deployment of PaaS-TA Container-Platform and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) in the environment.
+The purpose of this document is to provide a guide for configuring the Kubernetes Cluster with Kubespray used for exclusive deployment of K-PaaS Container-Platform and installing K-PaaS Sidecar (hereinafter referred to as Sidecar) in the environment.
 
 <br>
 
 ## <div id='1.2'> 1.2. Range
-This Document was written based on [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [paas-ta-container-platform v1.4.0.1](https://github.com/PaaS-TA/paas-ta-container-platform/blob/master/install-guide/standalone/cp-cluster-install.md).    
-This document is based on the installation of Sidecar after configuring the Kubernetes Cluster by utilizing PaaS-TA Container-Platform Single Distribution (Kubespray) in AWS and Openstack environments.  
+This Document was written based on [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [container-platform v1.4.0.1](https://github.com/K-PaaS/container-platform/blob/master/install-guide/standalone/cp-cluster-install.md).    
+This document is based on the installation of Sidecar after configuring the Kubernetes Cluster by utilizing K-PaaS Container-Platform Single Distribution (Kubespray) in AWS and Openstack environments.  
 This document was guided on the premise that there was a basic understanding of IaaS and Kubernetes.  
 
 <br>
 
 
 ## <div id='1.3'> 1.3. References
-PaaS-TA Container Platform : [https://github.com/PaaS-TA/paas-ta-container-platform](https://github.com/PaaS-TA/paas-ta-container-platform)  
+K-PaaS Container Platform : [https://github.com/K-PaaS/container-platform](https://github.com/K-PaaS/container-platform)  
 Kubespray : [https://kubespray.io](https://kubespray.io)  
 Kubespray github : [https://github.com/kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray)  
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
@@ -63,13 +63,13 @@ cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)
 <br>
 
 # <div id='2'> 2. Configuring a Kubernetes Cluster with Kubespray
-The basic Kubernetes Cluster configuration method follows the PaaS-TA Container Platform solo deployment installation guide, but there are some options or parts to be modified on IaaS.
+The basic Kubernetes Cluster configuration method follows the K-PaaS Container Platform solo deployment installation guide, but there are some options or parts to be modified on IaaS.
 Since the Kubernetes Cluster configuration in this guide has been briefly modified in the linked standalone deployment installation guide, see the linked standalone deployment installation guide for a detailed description of the Kubernetes Cluster configuration.
 
 <br>
 
 ## <div id='2.1'> 2.1. Prerequisite
-Key software and package version information for Kubernetes Cluster configuration can be found in the PaaS-TA Container Platform Standalone Deployment Installation Guide.  
+Key software and package version information for Kubernetes Cluster configuration can be found in the K-PaaS Container Platform Standalone Deployment Installation Guide.  
 In addition, the cf-for-k8s official document recommends the Kubernetes Cluster requirements as follows.
 - Kubernetes version : 1.19 ~ 1.22
 - At least 5 nodes
@@ -185,7 +185,7 @@ Starting with Linux Kernel version **v5.9**, xattr is supported on NFS, so if yo
 - Check the Linux Kernel Version.
   ```
   $ uname -a
-  Linux paasta-cp-master 4.15.0-206-generic #217-Ubuntu SMP Fri Feb 3 19:10:13 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
+  Linux kpaas-cp-master 4.15.0-206-generic #217-Ubuntu SMP Fri Feb 3 19:10:13 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
   ```
 
 
@@ -211,7 +211,7 @@ Starting with Linux Kernel version **v5.9**, xattr is supported on NFS, so if yo
 - Check the Linux Kernel version after reboot.
   ```
   $ uname -a
-  Linux paasta-cp-master 5.9.0-050900-generic #202010112230 SMP Sun Oct 11 22:34:01 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+  Linux kpaas-cp-master 5.9.0-050900-generic #202010112230 SMP Sun Oct 11 22:34:01 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
   ```
 
 ### <div id='2.3.2'> 2.3.2 NFS Installation
@@ -337,7 +337,7 @@ All the installation process after creating and deploying SSH Key must be done a
   Your identification has been saved in /home/ubuntu/.ssh/id_rsa.
   Your public key has been saved in /home/ubuntu/.ssh/id_rsa.pub.
   The key fingerprint is:
-  SHA256:pIG4/G309Dof305mWjdNz1OORx9nQgQ3b8yUP5DzC3w ubuntu@paasta-cp-master
+  SHA256:pIG4/G309Dof305mWjdNz1OORx9nQgQ3b8yUP5DzC3w ubuntu@kpaas-cp-master
   The key's randomart image is:
   +---[RSA 2048]----+
   |            ..= o|
@@ -357,7 +357,7 @@ All the installation process after creating and deploying SSH Key must be done a
   ## Copy the Public Key Shown
   
   $ cat ~/.ssh/id_rsa.pub
-  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@paasta-cp-master
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@kpaas-cp-master
   ```
 
 - Copy the public key to the end of the body of the authorized_keys file for the Master and Worker Nodes to use (add it below the existing body content).
@@ -366,14 +366,14 @@ All the installation process after creating and deploying SSH Key must be done a
 
   ex)
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDRueywSiuwyfmCSecHu7iwyi3xYS1xigAnhR/RMg/Ws3yOuwbKfeDFUprQR24BoMaD360uyuRaPpfqSL3LS9oRFrj0BSaQfmLcMM1+dWv+NbH/vvq7QWhIszVCLzwTqlHrhgNsh0+EMhqc15KEo5kHm7d7vLc0fB5tZkmovsUFzp01Ceo9+Qye6+j+UM6ssxdTmatoMP3ZZKZzUPF0EZwTcGG6+8rVK2G8GhTqwGLj9E+As3GB1YdOvr/fsTAi2PoxxFsypNR4NX8ZTDvRdAUzIxz8wv2VV4mADStSjFpE7HWrzr4tZUjvvVFptU4LbyON9YY4brMzjxA7kTuf/e3j Generated-by-Nova
-  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@paasta-cp-master  
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@kpaas-cp-master  
   ```
 <br>
 
 ## <div id='2.5'> 2.5. Kubespray Download
-- Download the Kube spray at the following path using the git clone command. The version of paas-ta-container-platform in this installation guide is **v1.4.0.1** and the version of Kubespray is **v2.20.0**.
+- Download the Kube spray at the following path using the git clone command. The version of container-platform in this installation guide is **v1.4.0.1** and the version of Kubespray is **v2.20.0**.
   ```
-  $ git clone https://github.com/PaaS-TA/paas-ta-container-platform-deployment.git -b v1.4.0.1
+  $ git clone https://github.com/K-PaaS/container-platform-deployment.git -b v1.4.0.1
   ```
 
 <br>
@@ -384,7 +384,7 @@ Predefine the environment variables needed to install Kubespray and run the inst
 
 - Proceed to Kubespray installation path.
   ```
-  $ cd paas-ta-container-platform-deployment/standalone/single_control_plane
+  $ cd container-platform-deployment/standalone/single_control_plane
   ```
 
 - Define the environment variables required to install Kubespray. Hostname and IP information can be found at the location below
@@ -489,11 +489,11 @@ Verify the Kubespray installation by checking the Pods in the Kubernetes Node an
 ```
 $ kubectl get nodes
 NAME                 STATUS   ROLES                  AGE   VERSION
-paasta-cp-master     Ready    control-plane          12m   v1.24.6
-paasta-cp-worker-1   Ready    <none>                 10m   v1.24.6
-paasta-cp-worker-2   Ready    <none>                 10m   v1.24.6
-paasta-cp-worker-3   Ready    <none>                 10m   v1.24.6
-paasta-cp-worker-4   Ready    <none>                 10m   v1.24.6
+kpaas-cp-master     Ready    control-plane          12m   v1.24.6
+kpaas-cp-worker-1   Ready    <none>                 10m   v1.24.6
+kpaas-cp-worker-2   Ready    <none>                 10m   v1.24.6
+kpaas-cp-worker-3   Ready    <none>                 10m   v1.24.6
+kpaas-cp-worker-4   Ready    <none>                 10m   v1.24.6
 
 $ kubectl get pods -n kube-system
 NAME                                          READY   STATUS    RESTARTS      AGE
@@ -504,17 +504,17 @@ calico-node-nc58v                             1/1     Running   0             10
 coredns-657959df74-td5c2                      1/1     Running   0             8m15s
 coredns-657959df74-ztnjj                      1/1     Running   0             8m7s
 dns-autoscaler-b5c786945-rhlkd                1/1     Running   0             8m9s
-kube-apiserver-paasta-cp-master               1/1     Running   0             12m
-kube-controller-manager-paasta-cp-master      1/1     Running   1 (11m ago)   12m
+kube-apiserver-kpaas-cp-master               1/1     Running   0             12m
+kube-controller-manager-kpaas-cp-master      1/1     Running   1 (11m ago)   12m
 kube-proxy-dj5c8                              1/1     Running   0             10m
 kube-proxy-kkvhk                              1/1     Running   0             10m
 kube-proxy-nfttc                              1/1     Running   0             10m
 kube-proxy-znfgk                              1/1     Running   0             10m
-kube-scheduler-paasta-cp-master               1/1     Running   1 (11m ago)   12m
+kube-scheduler-kpaas-cp-master               1/1     Running   1 (11m ago)   12m
 metrics-server-5cd75b7749-xcrps               2/2     Running   0             7m57s
-nginx-proxy-paasta-cp-worker-1                1/1     Running   0             10m
-nginx-proxy-paasta-cp-worker-2                1/1     Running   0             10m
-nginx-proxy-paasta-cp-worker-3                1/1     Running   0             10m
+nginx-proxy-kpaas-cp-worker-1                1/1     Running   0             10m
+nginx-proxy-kpaas-cp-worker-2                1/1     Running   0             10m
+nginx-proxy-kpaas-cp-worker-3                1/1     Running   0             10m
 nodelocaldns-556gb                            1/1     Running   0             8m8s
 nodelocaldns-8dpnt                            1/1     Running   0             8m8s
 nodelocaldns-pvl6z                            1/1     Running   0             8m8s
@@ -533,7 +533,7 @@ $ source reset-cp-cluster.sh
 
 <br>
 
-# <div id='3'> 3. PaaS-TA Sidecar Installation
+# <div id='3'> 3. kpaas Sidecar Installation
 ## <div id='3.1'> 3.1. Introduction to Executable Files
 - The following executable files are required to install and use the Sidecar.
 
@@ -569,7 +569,7 @@ $ source reset-cp-cluster.sh
 - Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is v1.0.3.
   ```
   $ cd $HOME
-  $ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b v1.0.3
+  $ git clone https://github.com/K-PaaS/sidecar-deployment.git -b v1.0.3.1
   $ cd sidecar-deployment/install-scripts
   ```
 
@@ -593,7 +593,7 @@ $ source utils-install.sh
 ...
 
 NAME                                         READY   STATUS    RESTARTS   AGE   IP               NODE                  NOMINATED NODE   READINESS GATES
-pod/istio-operator-1-12-6-559bb4bc96-vf9nj   1/1     Running   0          2h    10.233.119.197   paasta-cp-worker-4    <none>           <none>
+pod/istio-operator-1-12-6-559bb4bc96-vf9nj   1/1     Running   0          2h    10.233.119.197   kpaas-cp-worker-4    <none>           <none>
 
 NAME                            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)      AGE   SELECTOR
 service/istio-operator-1-12-6   ClusterIP   10.233.29.48   <none>        8383/TCP     2h    name=istio-operator
@@ -948,4 +948,4 @@ $ source delete-sidecar.sh
 <br>
 
   
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar

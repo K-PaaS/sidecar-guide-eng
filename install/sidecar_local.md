@@ -1,4 +1,4 @@
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar - local
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar - local
 
 ## Table of Contents
 
@@ -7,7 +7,7 @@
   1.2. [Range](#1.2)  
   1.3. [References](#1.3)  
 
-2. [PaaS-TA Sidecar - local Installation](#2)  
+2. [K-PaaS Sidecar - local Installation](#2)  
   2.1. [Prerequisite](#2.1)  
   2.2. [Download Installation File](#2.2)  
   2.3. [Introduction and Installation of Executable Files](#2.3)  
@@ -20,7 +20,7 @@
 
 # <div id='1'> 1. Document Outline
 ## <div id='1.1'> 1.1. Purpose
-The purpose of this document is to provide a guide for configuring a Local Kubernetes Cluster and installing PaaS-TA Sidecar (hereinafter referred to as Sidecar) to a specified environment.
+The purpose of this document is to provide a guide for configuring a Local Kubernetes Cluster and installing K-PaaS Sidecar (hereinafter referred to as Sidecar) to a specified environment.
 
 <br>
 
@@ -38,7 +38,7 @@ minikube Document : [https://minikube.sigs.k8s.io/docs/](https://minikube.sigs.k
 
 <br>
 
-# <div id='2'> 2. PaaS-TA Sidecar - local Installation
+# <div id='2'> 2. K-PaaS Sidecar - local Installation
 ## <div id='2.1'> 2.1. Prerequisite
 The cf-for-k8s official document recommends the Local Kubernetes Cluster requirements as follows.
 - At least 4 CPU, 6GB Memory
@@ -53,7 +53,7 @@ The cf-for-k8s official document recommends the Local Kubernetes Cluster require
 - Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is v1.0.2.
 ```
 $ cd $HOME
-$ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b v1.0.2
+$ git clone https://github.com/K-PaaS/sidecar-deployment.git -b v1.0.3.1
 $ cd sidecar-deployment
 ```
 
@@ -242,6 +242,22 @@ $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 1:56:23AM: ---- waiting complete [305/305 done] ----
 
 Succeeded
+```
+- /etc/hosts에 사용할 도메인을 추가한다.
+```diff
+$ sudo vi /etc/hosts
+
+
++127.0.0.1 localhost api.vcap.me login.vcap.me uaa.vcap.me log-cache.vcap.me test-node-app.apps.vcap.me
+
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
+
 ```
 
 - Check if Sidecar is installed normally through the sample app.
@@ -460,4 +476,4 @@ $ minikube delete
 
 <br>
 
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Sidecar - local
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar - local

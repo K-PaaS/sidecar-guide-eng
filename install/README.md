@@ -1,7 +1,7 @@
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > PaaS-TA Sidecar Install
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > K-PaaS Sidecar Install
 
-## PaaS-TA Sidecar - Install
-- PaaS-TA Sidecar
+## K-PaaS Sidecar - Install
+- K-PaaS Sidecar
   - [Sidecar](./sidecar.md)
   - [Sidecar - local](./sidecar_local.md)
 
@@ -12,4 +12,4 @@
   - [Logging](./sidecar_logging.md)
 
 
-### [Index](https://github.com/PaaS-TA/Guide-eng/blob/master/README.md) > PaaS-TA Sidecar Install
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > K-PaaS Sidecar Install

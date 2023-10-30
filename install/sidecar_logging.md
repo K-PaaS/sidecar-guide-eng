@@ -1,4 +1,4 @@
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Logging Service
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service
 
 ## Table of Contents
 
@@ -21,7 +21,7 @@
 
 # <div id='1'> 1. Document Outline
 ## <div id='1.1'> 1.1. Purpose
-The purpose of this document is to provide a guide for using the Logging service in a PaaS-TA Sidecar (Sidecar) environment.
+The purpose of this document is to provide a guide for using the Logging service in a K-PaaS Sidecar (Sidecar) environment.
 
 <br>
 
@@ -70,7 +70,7 @@ LOGGING_NAMESPACE=logging                           # Logging Infra Namespace(Ku
 INFLUXDB_IP=influxdb.logging.svc.cluster.local      # InfluxDB IP
 INFLUXDB_HTTP_PORT="8086"                           # InfluxDB Port
 INFLUXDB_USERNAME=admin                             # InfluxDB Username
-INFLUXDB_PASSWORD=PaaS-TA2020                       # InfluxDB Password
+INFLUXDB_PASSWORD=K-PaaS2020                       # InfluxDB Password
 INFLUXDB_HTTPS_ENABLED=true                         # (e.g. true or false)
 INFLUXDB_DATABASE=logging_db                        # InfluxDB DB Name
 INFLUXDB_MEASUREMENT=logging_measurement            # InfluxDB Measurement Name
@@ -195,7 +195,7 @@ data:
 +        host influxdb.logging.svc.cluster.local
 +        port 8086
 +        user admin
-+        password PaaS-TA2020
++        password K-PaaS2020
 +        dbname logging_db
 +        measurement logging_measurement
 +        time_precision s
@@ -246,7 +246,7 @@ pod/uaa-6fc9cf8bcb-9mq7r                                  3/3     Running     0 
 
 ## <div id='2.5'> 2.5. Portal Log API Deployment
 - Modify the Manifest file.
-> $ vi $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.13/portal-log-api-2.3.2/manifest.yml
+> $ vi $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.14.1/portal-log-api-2.3.2.1/manifest.yml
 ```yaml
 applications:
 - name: portal-log-api
@@ -254,7 +254,7 @@ applications:
   instances: 1
   buildpacks:
   - java_buildpack
-  path: paas-ta-portal-log-api.jar
+  path: ap-portal-log-api.jar
   env:
 
     ...
@@ -263,7 +263,7 @@ applications:
     influxdb_ip: influxdb.logging.svc.cluster.local
     influxdb_url: https://influxdb.logging.svc.cluster.local:8086
     influxdb_username: admin
-    influxdb_password: PaaS-TA2020
+    influxdb_password: K-PaaS2020
     influxdb_database: logging_db
     influxdb_measurement: logging_measurement
     influxdb_limit: 50
@@ -272,10 +272,10 @@ applications:
 
 - Deploy the Portal Log API at the Sidecar environment.
 ```
-$ cd $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.13/portal-log-api-2.3.2
+$ cd $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.14.1/portal-log-api-2.3.2.1
 $ cf push -b paketo-buildpacks/java
 Pushing app portal-log-api to org portal / space system as admin...
-Applying manifest file /home/ubuntu/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.13/portal-log-api-2.3.2/manifest.yml...
+Applying manifest file /home/ubuntu/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.14.1/portal-log-api-2.3.2.1/manifest.yml...
 ...
 Waiting for app portal-log-api to start...
 Instances starting...
@@ -318,10 +318,10 @@ There are no running instances of this process.
 
 # <div id='3'> 3. Logging Service Management
 ## <div id='3.1'> 3.1. Logging Service Activation
-Activation code must be registered to use the Logging service in the PaaS-TA portal.
+Activation code must be registered to use the Logging service in the K-PaaS portal.
 
 
--	Access to PaaS-TA operator's Portal (admin).  
+-	Access to K-PaaS operator's Portal (admin).  
      ![001]
 
 -	Go to the Code Management menu in Operations Management and register the code as follows.
@@ -347,4 +347,4 @@ Activation code must be registered to use the Logging service in the PaaS-TA por
 <br>
 
 
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > [PaaS-TA Sidecar Install](./README.md) > Logging Service
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service

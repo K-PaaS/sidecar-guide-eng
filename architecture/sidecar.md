@@ -1,7 +1,7 @@
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > PaaS-TA Sidecar Architecture
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > K-PaaS Sidecar Architecture
 
 ## Purpose
-This document provides an architecture of PaaS-TA Sidecar
+This document provides an architecture of K-PaaS Sidecar
 <br><br>
 
 ## System Configuration Diagram
@@ -20,10 +20,10 @@ This document provides an architecture of PaaS-TA Sidecar
 <br>
 
 ## References
-PaaS-TA Container Platform : [https://github.com/PaaS-TA/paas-ta-container-platform](https://github.com/PaaS-TA/paas-ta-container-platform)  
+K-PaaS Container Platform : [https://github.com/K-PaaS/container-platform](https://github.com/K-PaaS/container-platform)  
 Kubespray : [https://kubespray.io](https://kubespray.io)  
 Kubespray github : [https://github.com/kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray)  
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
 cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
 
-### [Index](https://github.com/PaaS-TA/Guide/blob/master/README.md) > PaaS-TA Sidecar Architecture
+### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > K-PaaS Sidecar Architecture
