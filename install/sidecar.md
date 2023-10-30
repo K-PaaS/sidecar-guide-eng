@@ -11,24 +11,24 @@
   2.1. [Prerequisite](#2.1)  
   2.2. [AWS Settings (When Using AWS Environment)](#2.2)  
     ※ [(Refer) AWS IAM Settings](#2.2.1)  
-  2.3. [NFS 설정 (NFS 배포 시)](#2.3)  
-  　2.3.1 [Linux Kernel 버전 업그레이드](#2.3.1)  
-  　2.3.2 [NFS 설치](#2.3.2)  
+  2.3. [NFS Setting (when deploying NFS)](#2.3)  
+  　2.3.1 [Linux Kernel Version Upgrade](#2.3.1)  
+  　2.3.2 [NFS Installation](#2.3.2)  
   　　2.3.2.1 [Server](#2.3.2.1)  
   　　2.3.2.2 [Client](#2.3.2.2)  
-  　　2.3.2.3 [테스트](#2.3.2.3)  
-  2.4. [SSH Key 생성 및 배포](#2.4)  
-  2.5. [Kubespray 다운로드](#2.5)  
-  2.6. [Kubespray 설치 준비](#2.6)   
+  　　2.3.2.3 [Test](#2.3.2.3)  
+  2.4. [Create and Deploy SSH Key](#2.4)  
+  2.5. [Kubespray Download](#2.5)  
+  2.6. [Kubespray Installation Preparation](#2.6)   
   2.7. [Change Kubespray Settings for Sidecar Installation](#2.7)  
-  2.8. [Kubespray 설치](#2.8)  
-  2.9. [Kubespray 설치 확인](#2.9)  
-    ※ [(참고) Kubespray 삭제](#2.9.1)
+  2.8. [Kubespray Installation](#2.8)  
+  2.9. [Kubespray Installation Check](#2.9)  
+    ※ [(Refer) Delete Kubespray](#2.9.1)
 
 3. [PaaS-TA Sidecar Installation](#3)  
   3.1. [Introduction to Executable Files](#3.1)  
   3.2. [Download Executable Files](#3.2)  
-  3.3. [Istio CNI Plugin 활성화](#3.3)  
+  3.3. [Activate Istio CNI Plugin](#3.3)  
   3.4. [variable Settings](#3.4)  
   3.5. [Create Sidecar Values](#3.5)  
   3.6. [Create Sidecar Deployment YAML](#3.6)  
@@ -176,20 +176,20 @@ It describes how to set up AWS IAM.
   
 <br>
 
-## <div id='2.3'> 2.3. NFS 설정 (NFS 배포 시)
-본 설치 가이드는 NFS Server는 **Ubuntu 18.04**, NFS Client는 **Ubuntu 20.04** 환경에서 설치하는 것을 기준으로 하였다. NFS Server의 경우 Kubespray로 배포된 Cluster에서 사용할 Storage용이기에 Storage용 별도 VM에 설치한다.
+## <div id='2.3'> 2.3. NFS Setting (When Deploying NFS)
+This installation guide is based on installing NFS Server on **Ubuntu 18.04** and NFS Client on **Ubuntu 20.04**. For NFS Server, install it on a separate VM for storage as it will be used for storage in a cluster deployed with Kubespray.
 
-### <div id='2.3.1'> 2.3.1 Linux Kernel 버전 업그레이드
-Linux Kernel 버전 **v5.9**부터 NFS에서 xattr이 지원되므로, 버전이 v5.8 이하인 경우 다음 작업을 수행해야 한다. Kubernetes Cluster가 설치되는 모든 Node와 NFS Server로 사용할 VM에서 진행한다.
+### <div id='2.3.1'> 2.3.1 Linux Kernel Version Upgrade
+Starting with Linux Kernel version **v5.9**, xattr is supported on NFS, so if your version is v5.8 or earlier, you will need to perform the following tasks. Proceed on all nodes where the Kubernetes Cluster is installed and on the VM that will be used as the NFS Server.
 
-- Linux Kernel 버전을 확인한다.
+- Check the Linux Kernel Version.
   ```
   $ uname -a
   Linux paasta-cp-master 4.15.0-206-generic #217-Ubuntu SMP Fri Feb 3 19:10:13 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
   ```
 
 
-- 다음 경로에서 Linux Kernel 버전을 업그레이드 하는 데 필요한 *.deb 파일 다운로드를 진행한다. 본 설치 가이드에서의 Linux Kernel 버전은 **v5.9**이다.
+- Proceed to download the *.deb files required to upgrade the Linux Kernel version from the following path. The Linux Kernel version in this installation guide is **v5.9**.
   ```shell
   $ cd $HOME
   $ mkdir linux-kernel-5.9
@@ -201,110 +201,110 @@ Linux Kernel 버전 **v5.9**부터 NFS에서 xattr이 지원되므로, 버전이
   https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.9/amd64/linux-modules-5.9.0-050900-generic_5.9.0-050900.202010112230_amd64.deb
   ```
 
-- 다음 명령어를 실행하여 Linux Kernel 버전을 업그레이드 한다.
+- Run the command below and upgade the Linux Kernel version.
   ```
   $ sudo su
   # dpkg -i *.deb
   # reboot
   ```
 
-- reboot 후 다시 접속하여 Linux Kernel 버전을 확인한다.
+- Check the Linux Kernel version after reboot.
   ```
   $ uname -a
   Linux paasta-cp-master 5.9.0-050900-generic #202010112230 SMP Sun Oct 11 22:34:01 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
   ```
 
-### <div id='2.3.2'> 2.3.2 NFS 설치
+### <div id='2.3.2'> 2.3.2 NFS Installation
 #### <div id='2.3.2.1'> 2.3.2.1 Server
-- 패키지 업데이트 및 업그레이드를 진행한다.
+- Update and upgrade package.
   ```
   $ sudo apt -y update && sudo apt -y upgrade
   ```
-- 패키지를 설치한다.
+- Install package.
   ```
   $ sudo apt install -y nfs-common nfs-kernel-server rpcbind attr
   ```
-- 사용 가능한 NFS 버전을 확인한다. xattr을 활성화하기 위해서는 버전 **v4.2** 이상이 필요하다.
+- Check the NFS version that can be used. To activate xattr, versions later than **v4.2** is required.
   ```
   $ sudo cat /proc/fs/nfsd/versions
   # -2 +3 +4 +4.1 +4.2
   ```
-- NFS에서 사용될 디렉토리를 생성하고 권한을 부여한다.
+- Create the directory to be used in NFS and give authority.
   ```shell
   $ sudo mkdir -p /home/share/nfs
   $ sudo chmod 777 /home/share/nfs
   ```
-- 공유 디렉토리를 설정한다.
+- Set share directory.
   ```shell
   $ sudo vi /etc/exports
 
-  ## 형식 : [dir] [IP] [option]
-  ## 예시 : /home/share/nfs 10.0.0.1(rw,no_subtree_check,no_root_squash,async)
+  ## Form : [dir] [IP] [option]
+  ## Exaple : /home/share/nfs 10.0.0.1(rw,no_subtree_check,no_root_squash,async)
   /home/share/nfs {{MASTER_NODE_PRIVATE_IP}}(rw,no_subtree_check,no_root_squash,async)
   /home/share/nfs {{WORKER1_NODE_PRIVATE_IP}}(rw,no_subtree_check,no_root_squash,async)
   /home/share/nfs {{WORKER2_NODE_PRIVATE_IP}}(rw,no_subtree_check,no_root_squash,async)
   ...
   ```
-  > `rw` - 읽기쓰기  
-  > `no_subtree_check` - 공유 디렉터리가 서브 디렉터리를 가질 수 있음  
-  > `no_root_squash` - 클라이언트가 root 권한 획득 가능, 파일생성 시 클라이언트 권한으로 생성됨  
-  > `async` - 요청에 의해 변경되기 전에 요청에 응답, 성능 향상용
-- NFS 서버를 재시작한다.
+  > `rw` - Read Write  
+  > `no_subtree_check` - The share directory can have sub directory  
+  > `no_root_squash` - The client can have root authority, File will be created as cliend authority  
+  > `async` - Respond to requests before they are changed by the request, for better performance
+- Restart NFS Server.
   ```shell
   $ sudo /etc/init.d/nfs-kernel-server restart
   ```
-- 설정을 확인한다.
+- Check the Settings.
   ```shell
   $ sudo exportfs -v
   ```
-- 정상 결과
+- Successful Result
   ```
   /home/share/nfs
                 <world>(rw,async,wdelay,no_root_squash,no_subtree_check,sec=sys,rw,secure,no_root_squash,no_all_squash)
   ```
 
 #### <div id='2.3.2.2'> 2.3.2.2 Client
-- 패키지 업데이트 및 업그레이드를 진행한다.
+- Update and upgrade package.
   ```
   $ sudo apt -y update && sudo apt -y upgrade
   ```
-- 패키지를 설치한다.
+- Install package.
   ```
   $ sudo apt -y install nfs-common attr
   ```
-- NFS에서 사용될 디렉토리를 생성한다.
+- Create the dirctory to be used at NFS.
   ```shell
   $ sudo mkdir -p /home/share/nfs
   ```
-- 공유 디렉토리를 설정한다.
+- Set share dirctory.
   ```shell
   $ sudo vi /etc/fstab
 
-  ## 형식 : [file system] [dir] [type] [option] [dump] [pass]
-  ## 예시 : 10.10.10.122:/home/share/nfs  /home/share/nfs  nfs  noatime,nodiratime,noauto,hard,rsize=1048576,wsize=1048576,timeo=60,retrans=60  0 0
+  ## Form : [file system] [dir] [type] [option] [dump] [pass]
+  ## Example : 10.10.10.122:/home/share/nfs  /home/share/nfs  nfs  noatime,nodiratime,noauto,hard,rsize=1048576,wsize=1048576,timeo=60,retrans=60  0 0
   {NFS_SERVER_PRIVATE_IP}:/home/share/nfs  /home/share/nfs  nfs  noatime,nodiratime,noauto,hard,rsize=1048576,wsize=1048576,timeo=60,retrans=60  0 0
   ```
-  > `noatime` - 파일시스템 meta 정보에 file의 access time 기록하지 않음  
-  > `nodiratime` - 파일시스템 meta 정보에 directory의 access time 기록하지 않음  
-  > `noauto` - 부팅 시 자동으로 mount하지 않음  
-  > `hard` - 하드 마운트  
-  > `rsize` - NFS 서버에서 파일을 읽을 때 NFS가 사용하는 바이트 수 최대 읽기 버퍼의 크기  
-  > `wsize` - NFS 서버에 파일을 쓸 때 NFS가 사용하는 바이트 수 최대 쓰기 버퍼의 크기  
-  > `timeo` - 패킷을 재전송해야한다는 결론에 도달하기 전까지의 클라이언트 대기 시간  
-  > `retrans` - `timeo`만큼 기다린 후의 재시도 횟수
+  > `noatime` - Does not record the access time of the file at the file system meta information   
+  > `nodiratime` - Does not record the access time of the directory at the file system meta information  
+  > `noauto` - Does not mount automatically when booted 
+  > `hard` - Hard mount  
+  > `rsize` - The number of bytes NFS uses when reading files from an NFS server The size of the maximum read buffer 
+  > `wsize` - The number of bytes used by NFS when writing files to the NFS server The size of the maximum write buffer  
+  > `timeo` - The Waiting time of the client before coming to the conclusion that the packet needs to be retransmitted
+  > `retrans` - The number of retries after waiting `timeo`.
 
-- 파일 시스템을 마운트한다.
+- Mount the file system.
   ```shell
   $ sudo mount -t nfs -o vers=4.2 {NFS_SERVER_PRIVATE_IP}:/home/share/nfs /home/share/nfs
   ```
-- 설정을 확인한다.
+- Check the settings.
   ```
   $ mount | grep /home/share/nfs
   /dev/vda1 on /home/share/nfs type ext4 (rw,relatime)
   10.10.10.122:/home/share/nfs on /home/share/nfs type nfs4 (rw,relatime,vers=4.2,rsize=524288,wsize=524288,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.10.10.244,local_lock=none,addr=10.10.10.122)
   ```
 
-#### <div id='2.3.2.3'> 2.3.2.3 테스트
+#### <div id='2.3.2.3'> 2.3.2.3 Test
 - NFS Client
   ```
   $ cd /home/share/nfs
@@ -324,16 +324,16 @@ Linux Kernel 버전 **v5.9**부터 NFS에서 xattr이 지원되므로, 버전이
   
 <br>
 
-## <div id='2.4'> 2.4. SSH Key 생성 및 배포
-SSH Key 생성 및 배포 이후의 모든 설치과정은 **Master Node**에서 진행한다.
+## <div id='2.4'> 2.4. Create and Deploy SSH Key 
+All the installation process after creating and deploying SSH Key must be done at the **Master Node**.
 
-- Master Node에 접속하여 RSA 공개키를 생성한다.
+- Access to the Master Node and create RSA Public Key.
   ```
   $ ssh-keygen -t rsa
   Generating public/private rsa key pair.
-  Enter file in which to save the key (/home/ubuntu/.ssh/id_rsa): [엔터키 입력]
-  Enter passphrase (empty for no passphrase): [엔터키 입력]
-  Enter same passphrase again: [엔터키 입력]
+  Enter file in which to save the key (/home/ubuntu/.ssh/id_rsa): [Enter]
+  Enter passphrase (empty for no passphrase): [Enter]
+  Enter same passphrase again: [Enter]
   Your identification has been saved in /home/ubuntu/.ssh/id_rsa.
   Your public key has been saved in /home/ubuntu/.ssh/id_rsa.pub.
   The key fingerprint is:
@@ -352,15 +352,15 @@ SSH Key 생성 및 배포 이후의 모든 설치과정은 **Master Node**에서
   +----[SHA256]-----+
   ```
 
-- 사용할 Master, Worker Node에 공개키를 복사한다.
+- Copy the Public Key to the Master, Worker Node to be used.
   ```
-  ## 출력된 공개키 복사
+  ## Copy the Public Key Shown
   
   $ cat ~/.ssh/id_rsa.pub
   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5QrbqzV6g4iZT4iR1u+EKKVQGqBy4DbGqH7/PVfmAYEo3CcFGhRhzLcVz3rKb+C25mOne+MaQGynZFpZk4muEAUdkpieoo+B6r2eJHjBLopn5quWJ561H7EZb/GlfC5ThjHFF+hTf5trF4boW1iZRvUM56KAwXiYosLLRBXeNlub4SKfApe8ojQh4RRzFBZP/wNbOKr+Fo6g4RQCWrr5xQCZMK3ugBzTHM+zh9Ra7tG0oCySRcFTAXXoyXnJm+PFhdR6jbkerDlUYP9RD/87p/YKS1wSXExpBkEglpbTUPMCj+t1kXXEJ68JkMrVMpeznuuopgjHYWWD2FgjFFNkp ubuntu@paasta-cp-master
   ```
 
-- 사용할 Master, Worker Node의 authorized_keys 파일 본문의 마지막 부분(기존 본문 내용 아래 추가)에 공개키를 복사한다.
+- Copy the public key to the end of the body of the authorized_keys file for the Master and Worker Nodes to use (add it below the existing body content).
   ```
   $ vi ~/.ssh/authorized_keys
 
@@ -370,70 +370,70 @@ SSH Key 생성 및 배포 이후의 모든 설치과정은 **Master Node**에서
   ```
 <br>
 
-## <div id='2.5'> 2.5. Kubespray 다운로드
-- git clone 명령을 통해 다음 경로에서 Kubespray 다운로드를 진행한다. 본 설치 가이드에서의 paas-ta-container-platform의 버전은 **v1.4.0.1**이며 Kubespray 버전은 **v2.20.0** 이다.
+## <div id='2.5'> 2.5. Kubespray Download
+- Download the Kube spray at the following path using the git clone command. The version of paas-ta-container-platform in this installation guide is **v1.4.0.1** and the version of Kubespray is **v2.20.0**.
   ```
   $ git clone https://github.com/PaaS-TA/paas-ta-container-platform-deployment.git -b v1.4.0.1
   ```
 
 <br>
 
-## <div id='2.6'> 2.6. Kubespray 설치 준비
+## <div id='2.6'> 2.6. Kubespray Installation Preparation
 
-Kubespray 설치에 필요한 환경변수를 사전 정의 후 쉘 스크립트를 통해 설치를 진행한다.
+Predefine the environment variables needed to install Kubespray and run the installation through a shell script.
 
-- Kubespray 설치경로로 이동한다.
+- Proceed to Kubespray installation path.
   ```
   $ cd paas-ta-container-platform-deployment/standalone/single_control_plane
   ```
 
-- Kubespray 설치에 필요한 환경변수를 정의한다. HostName, IP 정보는 다음을 통해 확인할 수 있다.
+- Define the environment variables required to install Kubespray. Hostname and IP information can be found at the location below
   ```
   $ vi cp-cluster-vars.sh
   ```
 
   ```shell
-  ## HostName 정보 = 각 호스트의 쉘에서 hostname 명령어 입력
-  ## Private IP 정보 = 각 호스트의 쉘에서 ifconfig 입력 후 inet ip 입력
-  ## Public IP 정보 = 할당된 Public IP 정보 입력, 미 할당 시 Private IP 정보 입력
+  ## HostName Information = Input the hostname command at the shell of each host
+  ## Private IP Information = Input ifconig and enter the inet ip at the shell of each host
+  ## Public IP Information = Input assigned Public IP information, or Private IP information when unassigned 
 
   #!/bin/bash
 
-  export MASTER_NODE_HOSTNAME={Master Node의 HostName 정보 입력}
-  export MASTER_NODE_PUBLIC_IP={Master Node의 Public IP 정보 입력}
-  export MASTER_NODE_PRIVATE_IP={Master Node의 Private IP 정보 입력}
+  export MASTER_NODE_HOSTNAME={Enter the HostName information of the Master Node}
+  export MASTER_NODE_PUBLIC_IP={Enter the Public IP information of the Master Node}
+  export MASTER_NODE_PRIVATE_IP={Enter the Private IP information of the Master Node}
 
   ## Worker Node Count Info
-  export WORKER_NODE_CNT={Worker Node의 갯수}
+  export WORKER_NODE_CNT={Number of the Worker Node}
 
   ## Add Worker Node Info
-  export WORKER1_NODE_HOSTNAME={Worker 1번 Node의 HostName 정보 입력}
-  export WORKER1_NODE_PRIVATE_IP={Worker 1번 Node의 Private IP 정보 입력}
-  export WORKER2_NODE_HOSTNAME={Worker 2번 Node의 HostName 정보 입력}
-  export WORKER2_NODE_PRIVATE_IP={Worker 2번 Node의 Private IP 정보 입력}
-  export WORKER3_NODE_HOSTNAME={Worker 3번 Node의 HostName 정보 입력}
-  export WORKER3_NODE_PRIVATE_IP={Worker 3번 Node의 Private IP 정보 입력}
+  export WORKER1_NODE_HOSTNAME={Input HostName information of the Worker number 1 Node}
+  export WORKER1_NODE_PRIVATE_IP={Input Private IP information of the Worker number 1 Node}
+  export WORKER2_NODE_HOSTNAME={Input HostName information of the Worker number 2 Node}
+  export WORKER2_NODE_PRIVATE_IP={Input Private IP information of the Worker number 2 Node}
+  export WORKER3_NODE_HOSTNAME={Input HostName information of the Worker number 3 Node}
+  export WORKER3_NODE_PRIVATE_IP={Input Private IP information of the Worker number 3 Node}
   ...
-  export WORKER{n}_NODE_HOSTNAME={Worker Node의 갯수에 맞춰 HostName 정보 변수 추가}
-  export WORKER{n}_NODE_PRIVATE_IP={Worker Node의 갯수에 맞춰 Private IP 정보 변수 추가}
+  export WORKER{n}_NODE_HOSTNAME={Add HostName information variable according to the number of worker nodes}
+  export WORKER{n}_NODE_PRIVATE_IP={Add Private IP information variable according to the number of worker nodes}
   ```
 
-- 선택할 스토리지를 선택한다.
-  Node에 볼륨 추가가 불가능할 경우 NFS를, 볼륨 추가가 가능할 경우 Rook-Ceph을 선택하는 것을 권장한다.
-  NFS 선택 시 NFS Server의 Private IP 정보를 입력한다.
+- Select the according storage.
+  We recommend choosing NFS if you can't add volumes to Node, and Rook-Ceph if you can.
+  When selecting NFS, enter the NFS server's Private IP information.
 
   ```shell
   ...
   ## Storage Type Info (eg. nfs, rook-ceph)
-  export STORAGE_TYPE={설치할 Storage Type 정보 입력}
-  export NFS_SERVER_PRIVATE_IP={Storage Type nfs 설정 시 NFS Server의 Private IP 정보 입력}
+  export STORAGE_TYPE={Input Storage Type information to install}
+  export NFS_SERVER_PRIVATE_IP={Input Private IP information of the NFS server when setting Storage Type nfs}
   ...
   ```
 
 <br>
 
 ## <div id='2.7'> 2.7. Change Kubespray Settings for Sidecar Installation
-- `metrics_server_version`을 v0.6.4로 변경한다.
+- Change the `metrics_server_version` to v0.6.4.
   ```
   $ vi roles/download/defaults/main.yml
   ```
@@ -444,7 +444,7 @@ Kubespray 설치에 필요한 환경변수를 사전 정의 후 쉘 스크립트
   ...
   ```
 
-- 다음 부분을 주석처리 한다.
+- Annotiate the following part.
   ```
   $ vi cluster.yml
   ```
@@ -474,8 +474,8 @@ Kubespray 설치에 필요한 환경변수를 사전 정의 후 쉘 스크립트
   ```
   <br>
 
-## <div id='2.8'> 2.8. Kubespray 설치
-쉘 스크립트를 통해 필요 패키지 설치, Node 구성정보 설정, Kubespray 설치정보 설정, Ansible playbook을 통한 Kubespray 설치를 일괄적으로 진행한다.
+## <div id='2.8'> 2.8. Kubespray Installation
+The shell script installs the required packages, sets up the Node configuration, sets up the Kubespray installation, and installs Kubespray via Ansible playbook in batches.
 
 ```
 $ source deploy-cp-cluster.sh
@@ -483,8 +483,8 @@ $ source deploy-cp-cluster.sh
 
 <br>
 
-## <div id='2.9'> 2.9. Kubespray 설치 확인
-Kubernetes Node 및 kube-system Namespace의 Pod를 확인하여 Kubespray 설치를 확인한다.
+## <div id='2.9'> 2.9. Kubespray Installation Check
+Verify the Kubespray installation by checking the Pods in the Kubernetes Node and kube-system Namespace.
 
 ```
 $ kubectl get nodes
@@ -524,7 +524,7 @@ nodelocaldns-x7grn                            1/1     Running   0             8m
 
 <br>
 
-### <div id='2.9.1'> ※ (참고) Kubespray 삭제
+### <div id='2.9.1'> ※ (Refer) Delete Kubespray
 Use Ansible playbook and delete Kubespray.
 
 ```
@@ -537,36 +537,36 @@ $ source reset-cp-cluster.sh
 ## <div id='3.1'> 3.1. Introduction to Executable Files
 - The following executable files are required to install and use the Sidecar.
 
-  | 이름   |      설명      |
+  | Classification   |      Description      |
   |----------|-------------|
-  | [ytt](https://carvel.dev/ytt/) | Sidecar를 배포 시 사용 되는 YAML을 생성하는 툴 |
-  | [kapp](https://carvel.dev/kapp/) | Sidecar의 라이프사이클을 관리하는 툴 |
-  | [kubectl](https://github.com/kubernetes/kubectl) | Kubernetes Cluster를 제어하는 툴 |
-  | [bosh cli](https://github.com/cloudfoundry/bosh-cli) | Sidecar에서 사용될 임의의 비밀번호와 certificate를 생성하는 툴 |
-  | [cf cli](https://github.com/cloudfoundry/cli) (v7+) | Sidecar와 상호 작용하는 툴 |
+  | [ytt](https://carvel.dev/ytt/) | A tool that creates the YAML which is used when deploying Sidecar |
+  | [kapp](https://carvel.dev/kapp/) | A tool that manages the lifecycle of Sidecar |
+  | [kubectl](https://github.com/kubernetes/kubectl) | A tool that controls Kubernetes Cluster |
+  | [bosh cli](https://github.com/cloudfoundry/bosh-cli) | A tool that generate random passwords and certificates for use in Sidecar |
+  | [cf cli](https://github.com/cloudfoundry/cli) (v7+) | a tool to interact with Sidecar |
 
 <br>
 
 - The script used to install Sidecar is as follows:
 
-  | 이름   |      설명      | 비고 |
+  | Classification   |      Description      | Note |
   |----------|-------------|----|
-  | utils-install.sh | Sidecar 설치 & 활용 시 사용되는 툴 설치 스크립트 | ytt, kapp, bosh cli, cf cli 설치 |
-  | variables.yml | Sidecar 설치 시 적용하는 변수 설정 파일 ||
-  | 1.generate-values.sh | Sidecar 설치 시 사용 할 비밀번호, certificate등의 설정을 갖고있는 Manifest를 생성하는 스크립트 ||
-  | 2.rendering-values.sh | 비밀번호, certificate등의 설정을 갖고있는 Manifest를 활용해 YAML을 생성하는 스크립트 ||
-  | 3.deploy-sidecar.sh | 생성된 YAML을 이용하여 Sidecar를 설치하는 스크립트 ||
-  | delete-sidecar.sh | Sidecar를 삭제하는 스크립트 ||
-  | enable-istio-cni-plugin.sh | Istio CNI Plugin을 활성화 하는 스크립트 ||
-  | deploy-inject-self-signed-cert.sh | 자체 서명된 인증서를 사용하는 Private 레지스트리 사용 시 POD에 CA를 삽입하는 보조 스크립트 | 자세한 가이드는 deploy-inject-self-signed-cert.sh 파일 안 설명이나 [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) 참고 |
-  | delete-inject-self-signed-cert.sh | inject-self-signed-cert를 삭제하는 스크립트 |  |
-  | install-test.sh | 설치 후 Test App을 배포하여 확인하는 스크립트 ||
+  | utils-install.sh | Tool installation scripts for installing & utilizing Sidecar | ytt, kapp, bosh cli, cf cli installation |
+  | variables.yml | Variable configuration file to apply when installing Sidecar ||
+  | 1.generate-values.sh | A script that generates a manifest with settings such as password, certificate, etc. to be used when installing Sidecar. ||
+  | 2.rendering-values.sh | A script that generates YAML using a manifest with settings such as password, certificate, etc. ||
+  | 3.deploy-sidecar.sh | A script to install Sidecar using the generated YAML ||
+  | delete-sidecar.sh | A script to delete Sidecar ||
+  | enable-istio-cni-plugin.sh | A script to activate Istio CNI Plugin ||
+  | deploy-inject-self-signed-cert.sh | Auxiliary script to insert a CA into a POD when using a private registry with self-signed certificates | For detailed guide, refer to deploy-inject-self-signed-cert.sh file or  [cert-injection-webhook](https://github.com/vmware-tanzu/cert-injection-webhook) |
+  | delete-inject-self-signed-cert.sh | A script to delete inject-self-signed-cert |  |
+  | install-test.sh | A script to deploy and verify Test app after installation ||
 
 <br>
 
 ## <div id='3.2'> 3.2. Download Executable Files
 
-- git clone 명령을 통해 다음 경로에서 Sidecar 다운로드를 진행한다. 본 설치 가이드에서의 Sidecar의 버전은 v1.0.3 버전이다.
+- Use the git clone command to download Sidecar from the following path. The version of Sidecar in this installation guide is v1.0.3.
   ```
   $ cd $HOME
   $ git clone https://github.com/PaaS-TA/sidecar-deployment.git -b v1.0.3
@@ -582,9 +582,9 @@ $ source utils-install.sh
 
 <br>
 
-## <div id='3.3'> 3.3. Istio CNI Plugin 활성화
+## <div id='3.3'> 3.3. Activate Istio CNI Plugin
 
-- enable-istio-cni-plugin.sh 파일을 실행하여 Istio CNI Plugin을 활성화한다.
+- Activate Istio CNI Plugin by executing enable-istio-cni-plugin.sh file.
   ```
   $ source enable-istio-cni-plugin.sh
 
@@ -607,8 +607,8 @@ replicaset.apps/istio-operator-1-12-6-559bb4bc96   1         1         1       2
 
 <br>
 
-## <div id='3.4'> 3.4. variable 설정
-- variables.yml 파일을 편집하여 Sidecar 설치 시 옵션들을 설정한다.
+## <div id='3.4'> 3.4. variable Settings
+- Modify the variables.yml file to set the options when installing Sidecar.
   ```
 $ vi variables.yml
   ```
@@ -661,25 +661,25 @@ $ vi variables.yml
   external_db_cert_path=support-files/db.ca                   # if DB use cert --> add the contents of the db.ca file
                                                               # if DB don't use cert --> db.ca is empty
   ```
-- 주요 변수의 설명은 다음과 같다.
+- The core variables are as shown below
 
-  | 이름   |      설명      |
+  | Classification   |      Description      |
   |----------|-------------|
-  | iaas | Cluster가 구성된 IaaS (aws, openstack) |
-  | system_domain | Sidecar의 도메인(LoadBalancer와 연결되는 Domain) |
-  | use_lb | LoadBalancer 사용 여부 (사용 안할 시 system_domain을 Cluster Worker중 하나의 PublicIP와 연결된 system_domain으로 설정) <br> (e.g. Cluster Worker Floating IP : 3.50.50.50 -> system_domain : 3.50.50.50.nip.io 혹은 연결된 도메인 설정)|
-  | public_ip | LoadBalancer의 IP(클라우드 공급자가 제공하는 로드밸런서가 IP를 사용할 경우 설정) <br> (e.g. Openstack의 Octavia 사용 시) |
-  | storageclass_name | 사용할 Storageclass |
-  | app_registry_kind | Registry 종류 (dockerhub, private) |
-  | app_registry_address | app_registry_kind가 private일 경우 Registry 주소 입력 |
-  | use_external_blobstore | 외부 블롭스토어(minIO)를 사용할 경우 (true, false)|
-  | use_external_db | 외부 데이터베이스(postgres, mysql)를 사용할 경우 (true, false) |
+  | iaas | IaaS with Clusters Configured (aws, openstack) |
+  | system_domain | Domain of Sidecar(Domain that connects with LoadBalancer) |
+  | use_lb | Whether to use a LoadBalancer (Set system_domain to the system_domain connected with the PublicIP of one of the Cluster Workers if disabled) <br> (e.g. Cluster Worker Floating IP : 3.50.50.50 -> system_domain : 3.50.50.50.nip.io or set the connected domain)|
+  | public_ip | IP of the LoadBalancer(Set up if the load balancer provided by your cloud provider uses IP) <br> (e.g. When using Octavia of Openstack) |
+  | storageclass_name | Storageclass to use |
+  | app_registry_kind | Registry Type (dockerhub, private) |
+  | app_registry_address | Enter the registry address if app_registry_kind is private  |
+  | use_external_blobstore | When using an external blob store (minIO) (true, false)|
+  | use_external_db | When using an external database (postgres, mysql) (true, false) |.
 
 <br>
 
 ## <div id='3.5'> 3.5. Create Sidecar values
 - Execute a script that creates values to be used when installing Sidecar.
-  (설치 중 variables.yml을 수정하였다면 1.generate-values.sh부터 재시작 한다.)
+  (When variables.yml was modified during instllation, restart from 1.generate-values.sh.)
   ```
   $ source 1.generate-values.sh
   ```

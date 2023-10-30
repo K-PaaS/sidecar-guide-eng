@@ -2,52 +2,52 @@
 
 ## Table of Contents
 
-1. [문서 개요](#1)  
-   1.1. [목적](#1.1)  
-   1.2. [범위](#1.2)  
-   1.3. [참고자료](#1.3)
+1. [Document Outline](#1)  
+   1.1. [Purpose](#1.1)  
+   1.2. [Range](#1.2)  
+   1.3. [References](#1.3)
 
-2. [Logging 서비스 설치](#2)  
+2. [Logging Service Installation](#2)  
    2.1. [Prerequisite](#2.1)  
-   2.2. [Variable 설정](#2.2)  
-   2.3. [Infra 배포](#2.3)  
-   2.4. [Sidecar 설정 변경](#2.4)  
-   2.5. [Portal Log API 배포](#2.5)
+   2.2. [Variable Setting](#2.2)  
+   2.3. [Infrastructure Deployment](#2.3)  
+   2.4. [Modifying Sidecar Setting](#2.4)  
+   2.5. [Portal Log API Deployment](#2.5)
 
-3. [Logging 서비스 관리](#3)  
-   3.1. [Logging 서비스 활성화](#3.1)
-
-<br>
-
-# <div id='1'> 1. 문서 개요
-## <div id='1.1'> 1.1. 목적
-본 문서는 PaaS-TA Sidecar(이하 Sidecar) 환경에서 Logging 서비스를 사용하기 위한 가이드를 제공하는 데 목적이 있다.
+3. [Logging Service Management](#3)  
+   3.1. [Logging Service Activation](#3.1)
 
 <br>
 
-
-## <div id='1.2'> 1.2. 범위
-본 문서는 Logging 서비스를 검증하기 위한 기본 설치를 기준으로 작성하였다.
+# <div id='1'> 1. Document Outline
+## <div id='1.1'> 1.1. Purpose
+The purpose of this document is to provide a guide for using the Logging service in a PaaS-TA Sidecar (Sidecar) environment.
 
 <br>
 
 
-## <div id='1.3'> 1.3. 참고자료
+## <div id='1.2'> 1.2. Range
+This document is based on a basic installation to validate the Logging service.
+
+<br>
+
+
+## <div id='1.3'> 1.3. References
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
 cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
 cf-k8s-logging github : [https://github.com/cloudfoundry/cf-k8s-logging](https://github.com/cloudfoundry/cf-k8s-logging)
 
 <br><br>
 
-# <div id='2'> 2. Logging 서비스 설치
+# <div id='2'> 2. Logging Service Installation
 ## <div id='2.1'> 2.1. Prerequisite
-본 설치 가이드는 Kubernetes 환경에 Logging Infra (InfluxDB)를 POD의 형태로 배포하며, Portal Log API는 Sidecar에 배포를 진행한다.  
-**Sidecar 설치 시 Logging 서비스를 활성화**하고 싶다면, [2.2. Variable 설정](#2.2) 진행 후 Sidecar 설치를 진행한다.
+This installation guide deploys Logging Infrastructure (InfluxDB) in the form of POD in Kubernetes environment and Portal Log API in Sidecar. **If you want to enable the Logging service when installing Sidecar,** proceed with [2.2. Variable settings](#2.2) before installing Sidecar.
 
 <br>
 
-## <div id='2.2'> 2.2 Variable 설정
-POD의 형태로 배포되는 Infra와 Logging 서비스 변수를 설정한다.
+## <div id='2.2'> 2.2 Variable Setting
+Set up the Infra and Logging service variables that are deployed in the form of a POD
+.
 - Logging Variable
 > $ vi $HOME/sidecar-deployment/install-scripts/logging/logging-service-variable.yml
 ```shell script
@@ -81,14 +81,14 @@ INFLUXDB_TIME_PRECISION=s                           # Level of timestamp stored 
 
 <br>
 
-## <div id='2.3'> 2.3. Infra 배포
-- Kubernetes 환경에 Sidecar Logging 에서 사용 될 Infra를 배포한다.
+## <div id='2.3'> 2.3. Infrastructure Deployment
+- Deploy the Inftrastructure to be used in Sidecar Logging at the Kubernetes Environment.
 ```shell script
 $ cd $HOME/sidecar-deployment/install-scripts/logging/infra
 $ source deploy-logging-infra.sh
 ```
 
-- Infra가 정상적으로 배포되었는지 확인한다.
+- Check whether the Infrastucture is deployed successfully.
 > $ kubectl get statefulset,pods -n logging
 ```
 NAME                        READY   AGE
@@ -99,15 +99,15 @@ pod/influxdb-0   1/1     Running   0          1m
 
 <br>
 
-## <div id='2.4'> 2.4. Sidecar 설정 변경
-Logging 서비스를 활성화 하기 위해서는 Sidecar 설정 중 일부를 변경해야 한다.
-- `enable-logging-service.sh` 파일을 실행하여 Sidecar 설정을 변경한다.
+## <div id='2.4'> 2.4. Modifying Sidecar Setting
+To enable the logging service, you need to modify some of the Sidecar settings.
+- Run the `enable-logging-service.sh` file and modify the Sidecar settings.
 ```shell script
 $ cd $HOME/sidecar-deployment/install-scripts/logging
 $ source enable-logging-service.sh
 ```
 
-- Sidecar 설정이 정상적으로 변경되었는지 확인한다.
+- Check whether the Sidecar setting is modified successfully.
 > $ kubectl get configmap fluentd-config-ver-1 -n cf-system -o yaml
 ```diff
 apiVersion: v1
@@ -244,8 +244,8 @@ pod/uaa-6fc9cf8bcb-9mq7r                                  3/3     Running     0 
 
 <br>
 
-## <div id='2.5'> 2.5. Portal Log API 배포
-- Manifest 파일을 수정한다.
+## <div id='2.5'> 2.5. Portal Log API Deployment
+- Modify the Manifest file.
 > $ vi $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.13/portal-log-api-2.3.2/manifest.yml
 ```yaml
 applications:
@@ -270,7 +270,7 @@ applications:
     influxdb_httpsEnabled: true
 ```
 
-- Sidecar 환경에 Portal Log API를 배포한다.
+- Deploy the Portal Log API at the Sidecar environment.
 ```
 $ cd $HOME/sidecar-deployment/install-scripts/portal/portal-app/portal-app-1.2.13/portal-log-api-2.3.2
 $ cf push -b paketo-buildpacks/java
@@ -316,25 +316,26 @@ There are no running instances of this process.
 
 <br><br>
 
-# <div id='3'> 3. Logging 서비스 관리
-## <div id='3.1'> 3.1. Logging 서비스 활성화
-PaaS-TA 포탈에서 서비스를 사용하기 위해 Logging 서비스 활성화 코드 등록을 해 주어야 한다.
+# <div id='3'> 3. Logging Service Management
+## <div id='3.1'> 3.1. Logging Service Activation
+Activation code must be registered to use the Logging service in the PaaS-TA portal.
 
--	PaaS-TA 운영자 포탈에 접속한다.  
+
+-	Access to PaaS-TA operator's Portal (admin).  
      ![001]
 
--	운영관리의 코드관리 메뉴로 이동하여 다음과 같이 코드를 등록한다.
+-	Go to the Code Management menu in Operations Management and register the code as follows.
 
 > ※ Group Table  
-> 코드 ID  : LOGGING  
-> 코드 이름 : Logging Service  
+> CODE ID  : LOGGING  
+> CODE NAME : Logging Service  
 > ![002]
 >
 > ※ Detail Table  
 > Key : enable_logging_service  
 > Value : true  
-> 요약 : Logging Service Enable Code  
-> 사용 : Y  
+> Summary : Logging Service Enable Code  
+> Use : Y  
 > ![003]
 ![004]
 
