@@ -46,7 +46,7 @@ The purpose of this document is to provide a guide for configuring the Kubernete
 <br>
 
 ## <div id='1.2'> 1.2. Range
-This Document was written based on [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [container-platform v1.4.0.1](https://github.com/K-PaaS/container-platform/blob/master/install-guide/standalone/cp-cluster-install.md).    
+This Document was written based on [cf-for-k8s v5.4.2](https://github.com/cloudfoundry/cf-for-k8s/tree/v5.4.2), [container-platform v1.4.0.1](https://github.com/K-PaaS/cp-guide-eng/tree/master/install-guide/standalone).    
 This document is based on the installation of Sidecar after configuring the Kubernetes Cluster by utilizing K-PaaS Container-Platform Single Distribution (Kubespray) in AWS and Openstack environments.  
 This document was guided on the premise that there was a basic understanding of IaaS and Kubernetes.  
 
@@ -57,8 +57,7 @@ This document was guided on the premise that there was a basic understanding of 
 K-PaaS Container Platform : [https://github.com/K-PaaS/container-platform](https://github.com/K-PaaS/container-platform)  
 Kubespray : [https://kubespray.io](https://kubespray.io)  
 Kubespray github : [https://github.com/kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray)  
-cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
-cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
+cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)
 
 <br>
 
@@ -686,7 +685,7 @@ $ vi variables.yml
 <br>
 
 - The Manifest file is created in manifest/sidecar-values.yml, and various values can be checked and modified.   
-  (Check the available variables from the [Link](https://cf-for-k8s.io/docs/platform_operators/config-values/).)
+  (Check the available variables from the [Link](https://github.com/cloudfoundry/cf-for-k8s).)
 
   ```
   $ vi manifest/sidecar-values.yml

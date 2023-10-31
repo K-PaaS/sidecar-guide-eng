@@ -31,8 +31,7 @@ This document is based on the installation of Sidecar after configuring the Loca
 <br>
 
 ## <div id='1.3'> 1.3. References
-cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
-cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
+cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)
 kind Document :  [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)  
 minikube Document : [https://minikube.sigs.k8s.io/docs/](https://minikube.sigs.k8s.io/docs/)  
 

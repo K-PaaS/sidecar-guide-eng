@@ -33,8 +33,7 @@ This document is based on a basic installation to validate the Logging service.
 
 
 ## <div id='1.3'> 1.3. References
-cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)  
-cf-for-k8s Document : [https://cf-for-k8s.io/docs/](https://cf-for-k8s.io/docs/)  
+cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)
 cf-k8s-logging github : [https://github.com/cloudfoundry/cf-k8s-logging](https://github.com/cloudfoundry/cf-k8s-logging)
 
 <br><br>
