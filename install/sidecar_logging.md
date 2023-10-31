@@ -1,4 +1,4 @@
-### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service
 
 ## Table of Contents
 
@@ -347,4 +347,4 @@ Activation code must be registered to use the Logging service in the K-PaaS port
 <br>
 
 
-### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Logging Service

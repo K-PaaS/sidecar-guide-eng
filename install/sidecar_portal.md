@@ -160,6 +160,6 @@ portal-web-user       started           web:1/1                                 
 
 When a reliable certificate is not applied to the Sidecar, the link to access the web user portal needs to be accessed by http.  
 Refer to the link below for guides for operating and setting up the portal.  
-[Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [AP Install]([../README.md](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/README.md)) > [Portal Container Type](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/portal/container_type.md) > [K-PaaS AP Portal Operation](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/portal/container_type.md#4)
+[Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [AP Install](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/README.md) > [Portal Container Type](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/portal/container_type.md) > [K-PaaS AP Portal Operation](https://github.com/K-PaaS/application-platform-guide-eng/blob/master/install/portal/container_type.md#4)
 
 ### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar

@@ -1,4 +1,4 @@
-### [Index](https://github.com/K-PaaS/Guide/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar
+### [Index](https://github.com/K-PaaS/Guide-eng/blob/master/README.md) > [K-PaaS Sidecar Install](./README.md) > Sidecar
 
 ## Table of Contents
 
@@ -588,21 +588,21 @@ $ source utils-install.sh
   ```
   $ source enable-istio-cni-plugin.sh
 
-...
-...
-...
+  ...
+  ...
+  ...
 
-NAME                                         READY   STATUS    RESTARTS   AGE   IP               NODE                  NOMINATED NODE   READINESS GATES
-pod/istio-operator-1-12-6-559bb4bc96-vf9nj   1/1     Running   0          2h    10.233.119.197   kpaas-cp-worker-4    <none>           <none>
+  NAME                                         READY   STATUS    RESTARTS   AGE   IP               NODE                  NOMINATED NODE   READINESS GATES
+  pod/istio-operator-1-12-6-559bb4bc96-vf9nj   1/1     Running   0          2h    10.233.119.197   kpaas-cp-worker-4    <none>           <none>
 
-NAME                            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)      AGE   SELECTOR
-service/istio-operator-1-12-6   ClusterIP   10.233.29.48   <none>        8383/TCP     2h    name=istio-operator
+  NAME                            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)      AGE   SELECTOR
+  service/istio-operator-1-12-6   ClusterIP   10.233.29.48   <none>        8383/TCP     2h    name=istio-operator
 
-NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                                  SELECTOR
-deployment.apps/istio-operator-1-12-6   1/1     1            1           2h    istio-operator   gcr.io/istio-testing/operator:latest    name=istio-operator
+  NAME                                    READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS       IMAGES                                  SELECTOR
+  deployment.apps/istio-operator-1-12-6   1/1     1            1           2h    istio-operator   gcr.io/istio-testing/operator:latest    name=istio-operator
 
-NAME                                               DESIRED   CURRENT   READY   AGE   CONTAINERS       IMAGES                                  SELECTOR
-replicaset.apps/istio-operator-1-12-6-559bb4bc96   1         1         1       2h    istio-operator   gcr.io/istio-testing/operator:latest    name=istio-operator,pod-template-hash=559bb4bc96
+  NAME                                               DESIRED   CURRENT   READY   AGE   CONTAINERS       IMAGES                                  SELECTOR
+  replicaset.apps/istio-operator-1-12-6-559bb4bc96   1         1         1       2h    istio-operator   gcr.io/istio-testing/operator:latest    name=istio-operator,pod-template-hash=559bb4bc96
   ```
 
 <br>
@@ -828,7 +828,7 @@ When using AWS LoadBalancer, a domain connection using Route53 is required.
 ## <div id='3.8'> 3.8. Sidecar Login and Deployment of Test App
 - Deploy the test app to check if the app was deployed normally.
   ```
-  # 배포 자동 테스트
+  # Auto Deployment test
   $ source install-test.sh
   .......
   Waiting for app test-node-app to start...
@@ -859,7 +859,7 @@ When using AWS LoadBalancer, a domain connection using Route53 is required.
   
   
   
-  # 배포 수동 테스트
+  # Manual Deployment test
   $ cf login -a api.$(grep system_domain ./manifest/sidecar-values.yml | cut -d" " -f2 | sed -e 's/\"//g') --skip-ssl-validation -u admin -p "$(grep cf_admin_password ./manifest/sidecar-values.yml | cut -d" " -f2)"
   
   Authenticating...
@@ -875,68 +875,68 @@ When using AWS LoadBalancer, a domain connection using Route53 is required.
   
 
 
-$ cf create-space test-space
-Creating space test-space in org system as admin...
-OK
+  $ cf create-space test-space
+  Creating space test-space in org system as admin...
+  OK
+  
+  Assigning role SpaceManager to user admin in org system/space test-space as admin...
+  OK
+  
+  Assigning role SpaceDeveloper to user admin in org system/space test-space as admin...
+  OK
 
-Assigning role SpaceManager to user admin in org system/space test-space as admin...
-OK
-
-Assigning role SpaceDeveloper to user admin in org system/space test-space as admin...
-OK
-
-TIP: Use 'cf target -o "system" -s "test-space"' to target new space
-
-
-
-$ cf target -s test-space
-API endpoint:   https://api.<system_domain>
-API version:    3.104.0
-user:           admin
-org:            system
-space:          test-space
+  TIP: Use 'cf target -o "system" -s "test-space"' to target new space
 
 
 
-$ cf push -p ../tests/smoke/assets/test-node-app/ test-node-app
-Pushing app test-node-app to org system / space test-space as admin...
-Packaging files to upload...
-Uploading files...
- 558 B / 558 B [============================================================] 100.00% 1s
-
-Waiting for API to complete processing files...
-.......
-.......
-Build successful
-
-Waiting for app test-node-app to start...
-
-Instances starting...
-Instances starting...
-
-name:                test-node-app
-requested state:     started
-isolation segment:   placeholder
-routes:              test-node-app.apps.system.domain
-last uploaded:       Thu 30 Sep 07:04:54 UTC 2021
-stack:               
-buildpacks:          
-isolation segment:   placeholder
-
-type:            web
-sidecars:        
-instances:       1/1
-memory usage:    1024M
-start command:   node server.js
-  state     since                  cpu    memory   disk     details
-#0   running   2021-09-30T07:06:01Z   0.0%   0 of 0   0 of 0   
+  $ cf target -s test-space
+  API endpoint:   https://api.<system_domain>
+  API version:    3.104.0
+  user:           admin
+  org:            system
+  space:          test-space
 
 
 
-$ curl -k https://test-node-app.apps.system.domain
-Hello World
+  $ cf push -p ../tests/smoke/assets/test-node-app/ test-node-app
+  Pushing app test-node-app to org system / space test-space as admin...
+  Packaging files to upload...
+  Uploading files...
+  558 B / 558 B [============================================================] 100.00% 1s
 
-```
+  Waiting for API to complete processing files...
+  .......
+  .......
+  Build successful
+  
+  Waiting for app test-node-app to start...
+  
+  Instances starting...
+  Instances starting...
+  
+  name:                test-node-app
+  requested state:     started
+  isolation segment:   placeholder
+  routes:              test-node-app.apps.system.domain
+  last uploaded:       Thu 30 Sep 07:04:54 UTC 2021
+  stack:               
+  buildpacks:          
+  isolation segment:   placeholder
+  
+  type:            web
+  sidecars:        
+  instances:       1/1
+  memory usage:    1024M
+  start command:   node server.js
+    state     since                  cpu    memory   disk     details
+  #0   running   2021-09-30T07:06:01Z   0.0%   0 of 0   0 of 0   
+
+
+
+  $ curl -k https://test-node-app.apps.system.domain
+  Hello World
+  
+  ```
 
 <br>
   

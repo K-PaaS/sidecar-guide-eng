@@ -243,7 +243,7 @@ $ kapp deploy -a sidecar -f tmp/sidecar-rendered.yml -y
 
 Succeeded
 ```
-- /etc/hosts에 사용할 도메인을 추가한다.
+- Add the domain to use at /etc/hosts
 ```diff
 $ sudo vi /etc/hosts
 
