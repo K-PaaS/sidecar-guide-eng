@@ -20,7 +20,7 @@ This document provides an architecture of K-PaaS Sidecar
 <br>
 
 ## References
-K-PaaS Container Platform : [https://github.com/K-PaaS/container-platform](https://github.com/K-PaaS/container-platform)  
+K-PaaS Container Platform : [https://github.com/k-PaaS/cp-guide-eng/tree/master/install-guide/standalone](https://github.com/k-PaaS/cp-guide-eng/tree/master/install-guide/standalone)  
 Kubespray : [https://kubespray.io](https://kubespray.io)  
 Kubespray github : [https://github.com/kubernetes-sigs/kubespray](https://github.com/kubernetes-sigs/kubespray)  
 cf-for-k8s github : [https://github.com/cloudfoundry/cf-for-k8s](https://github.com/cloudfoundry/cf-for-k8s)   
